@@ -205,4 +205,4 @@ F=[F11 F12; F21 F22];
 qcrb=trace(G/F)./(observations);
 
 % Save results
-%save(’qnetwork_results.txt’,’observations’,’epsilon_trials’,’qcrb’,'ascii')
+%save('qnetwork_results.txt','observations','epsilon_trials','qcrb','ascii')
