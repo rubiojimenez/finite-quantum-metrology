@@ -1,5 +1,5 @@
 function [initial_state] = initial_probe(state_sel)
-% Common states in optical interferometry, where ’state_sel’ is a number
+% Common states in optical interferometry, where 'state_sel' is a number
 % from 1 to 5 labelling the quantum probes
 %
 % (1) Coherent state: |alpha/sqrt(2),-i*alpha/sqrt(2)>
@@ -55,7 +55,7 @@ if state_sel==1
   initial_state=sparse(kron(initial_temp,vacuum(op_cutoff)));
   initial_state=beam_splitter(op_cutoff)*initial_state;
 elseif state_sel==2
-  initial_temp=sparse((creation(op_cutoff)ˆnumber)*vacuum(op_cutoff));
+  initial_temp=sparse((creation(op_cutoff)^number)*vacuum(op_cutoff));
   initial_state=sparse(kron(initial_temp,vacuum(op_cutoff))+kron(vacuum(op_cutoff),initial_temp));
 elseif state_sel==3
   initial_temp1=sparse(squeeze(op_cutoff,zeta)*vacuum(op_cutoff));
@@ -66,6 +66,6 @@ elseif state_sel==4
 elseif state_sel==5
   initial_state=squeeze(op_cutoff,zcat)*(displacement(op_cutoff,alphacat)+displacement(op_cutoff,-alphacat))*vacuum(op_cutoff);
   initial_state=kron(initial_state,initial_state);
-  initial_state=initial_state/sqrt((initial_state’*initial_state));
+  initial_state=initial_state/sqrt((initial_state'*initial_state));
 end
-initial_state=initial_state/sqrt((initial_state’*initial_state)); end
+initial_state=initial_state/sqrt((initial_state'*initial_state)); end
