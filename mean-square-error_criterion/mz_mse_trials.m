@@ -46,15 +46,15 @@ end
 tau_mc=1250;
 
 % Measurement scheme
-[outcomes_space,proj_columns] = mz_pom(state_choice,povm_choice,prior_width, prior_mean);
+[outcomes_space,proj_columns] = mz_pom(state_choice,pom_choice,prior_width, prior_mean);
 
 % State after the phase shift, final state and amplitudes
 amplitudes=zeros(length(outcomes_space),dim_theta);
 for z=1:dim_theta
   after_phase_shift=sparse(phase_shift_diff(op_cutoff,theta(z))*initial_state);
   for x=1:length(outcomes_space)
-    povm_element=proj_columns(:,x);
-    amplitudes(x,z)=sparse(povm_element'*after_phase_shift);
+    pom_element=proj_columns(:,x);
+    amplitudes(x,z)=sparse(pom_element'*after_phase_shift);
   end
 end
 
