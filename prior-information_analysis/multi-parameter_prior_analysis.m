@@ -20,7 +20,7 @@ gamma_par=1; % Local strategy
 %gamma_par=0; % Maximally entangled strategy
 %gamma_par=0.530696; % Asymptotically optimal strategy
 %gamma_par=0.3343605926149827; % Balanced startegy
-initial_state=sparse([1 gamma_par gamma_par 1])’/sqrt(2+2*gamma_parˆ2);
+initial_state=sparse([1 gamma_par gamma_par 1])'/sqrt(2+2*gamma_par^2);
 
 % Generators
 sigmaz=sparse([1 0; 0 -1]);
@@ -28,18 +28,18 @@ g1=kron(sigmaz,identity(2))/2;
 g2=kron(identity(2),sigmaz)/2;
 
 % Asymptotically optimal local POM (F = F_q, chapter 6)
-proj1=sparse([-1 -1 1 1])’/2;
-proj2=sparse([1 1 1 1])’/2;
-proj3=sparse([1 -1 -1 1])’/2;
-proj4=sparse([-1 1 -1 1])’/2;
-proj_columns=[proj1’;proj2’;proj3’;proj4’]’;
+proj1=sparse([-1 -1 1 1])'/2;
+proj2=sparse([1 1 1 1])'/2;
+proj3=sparse([1 -1 -1 1])'/2;
+proj4=sparse([-1 1 -1 1])'/2;
+proj_columns=[proj1';proj2';proj3';proj4']';
 
 % Optimal single-shot POM (chapter 7)
-% proj1=sparse([1i 1 1 -1i])’/2;
-% proj2=sparse([-1i 1 1 1i])’/2;
-% proj3=sparse([1i -1 1 1i])’/2;
-% proj4=sparse([-1i -1 1 -1i])’/2;
-% proj_columns=[proj1’;proj2’;proj3’;proj4’]’;
+% proj1=sparse([1i 1 1 -1i])'/2;
+% proj2=sparse([-1i 1 1 1i])'/2;
+% proj3=sparse([1i -1 1 1i])'/2;
+% proj4=sparse([-1i -1 1 -1i])'/2;
+% proj_columns=[proj1';proj2';proj3';proj4']';
 
 % Parameter domain
 dim_theta=200;
@@ -58,7 +58,7 @@ for z1=1:dim_theta
     after_encoding=sparse(expm(-1i*(g1*theta1(z1)+g2*theta1(z2))))*initial_state;
     for x=1:size(proj_columns,2)
       povm_element=proj_columns(:,x);
-      amplitudes_temp=sparse(povm_element)’*sparse(after_encoding);
+      amplitudes_temp=sparse(povm_element)'*sparse(after_encoding);
       amplitudes(x,z1,z2)=amplitudes_temp;
       amplitudes_sparse(z1,z2,x)=amplitudes_temp;
     end
@@ -71,11 +71,11 @@ end
 % Likelihood function
 likelihood=amplitudes.*conj(amplitudes);
 if (1-sum(likelihood(:,1,1)))>1e-7
-  error(’The quantum probabilities do not sum to one.’)
+  error('The quantum probabilities do not sum to one.')
 end
 likelihood_sparse=amplitudes_sparse.*conj(amplitudes_sparse);
 if (1-sum(likelihood_sparse(1,1,:),3))>1e-7
-  error(’The quantum probabilities do not sum to one.’)
+  error('The quantum probabilities do not sum to one.')
 end
 
 % Prior probability
@@ -136,14 +136,14 @@ for runs=1:mu_max
 end
 
 % Plot of the posterior
-contour(theta1’,theta2’,prob_temp,’LevelStep’,0.1,’Fill’,’on’)
+contour(theta1',theta2',prob_temp,'LevelStep',0.1,'Fill','on')
 xticks([0 pi/4 pi/2 3*pi/4 pi 5*pi/4 3*pi/2 7*pi/4 2*pi])
-xticklabels({’0’, ’\pi/4’, ’\pi/2’, ’3\pi/4’, ’\pi’, ’5\pi/4’, ’3\pi/2’,’7\pi/4’,’2\pi’})
+xticklabels({'0', '\pi/4', '\pi/2', '3\pi/4', '\pi', '5\pi/4', '3\pi/2','7\pi/4','2\pi'})
 yticks([0 pi/4 pi/2 3*pi/4 pi 5*pi/4 3*pi/2 7*pi/4 2*pi])
-yticklabels({’0’, ’\pi/4’, ’\pi/2’, ’3\pi/4’, ’\pi’, ’5\pi/4’, ’3\pi/2’,’7\pi/4’,’2\pi’})
-xt = get(gca, ’XTick’);
+yticklabels({'0', '\pi/4', '\pi/2', '3\pi/4', '\pi', '5\pi/4', '3\pi/2','7\pi/4','2\pi'})
+xt = get(gca, 'XTick');
 fontsize=32;
-set(gca, ’FontSize’, fontsize,’FontName’,’Times New Roman’);
-yt = get(gca, ’YTick’);
-set(gca, ’FontSize’, fontsize,’FontName’,’Times New Roman’);
+set(gca,'FontSize', fontsize,'FontName','Times New Roman');
+yt = get(gca, 'YTick');
+set(gca,'FontSize', fontsize,'FontName','Times New Roman');
 grid
