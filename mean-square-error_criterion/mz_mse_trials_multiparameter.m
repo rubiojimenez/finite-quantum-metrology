@@ -2,9 +2,9 @@
 % 
 % The estimation scheme is a quantum sensing network with two qubits.
 %
-% Note that we use the trapezoidal rule ’trapz’ for the inner parameter
-% integrals because these have peaked integrands, while Simpson’s Rule
-% ’simps’ is a better choice when this problem does not arise, which is
+% Note that we use the trapezoidal rule 'trapz' for the inner parameter
+% integrals because these have peaked integrands, while Simpson's Rule
+% 'simps' is a better choice when this problem does not arise, which is
 % the case for the outer parameter integrals.
 clear
 
@@ -22,17 +22,17 @@ WD=[1 0; 0 1]/2;
 %K=[1 0; 0 1];
 
 % Transformation representing two linear functions
-V=[2/sqrt(4+piˆ2) 2/sqrt(5); pi/sqrt(4+piˆ2) 1/sqrt(5)];
+V=[2/sqrt(4+pi^2) 2/sqrt(5); pi/sqrt(4+pi^2) 1/sqrt(5)];
   
 % Combination of linear transformation and weighting matrix
-G=V*WD*V’;
+G=V*WD*V';
 
 % Initial state
 gamma_par=1; % Local strategy
 %gamma_par=0; % Maximally entangled strategy
 %gamma_par=0.530696; % Asymptotically optimal strategy
 %gamma_par=0.3343605926149827; % Balanced startegy
-initial_state=sparse([1 gamma_par gamma_par 1])’/sqrt(2+2*gamma_parˆ2);
+initial_state=sparse([1 gamma_par gamma_par 1])'/sqrt(2+2*gamma_par^2);
 
 % Generators
 sigmaz=sparse([1 0; 0 -1]);
@@ -40,18 +40,18 @@ g1=kron(sigmaz,identity(2))/2;
 g2=kron(identity(2),sigmaz)/2;
 
 % Asymptotically optimal local POM (F = F_q, chapter 6)
-proj1=sparse([-1 -1 1 1])’/2;
-proj2=sparse([1 1 1 1])’/2;
-proj3=sparse([1 -1 -1 1])’/2;
-proj4=sparse([-1 1 -1 1])’/2;
-proj_columns=[proj1’;proj2’;proj3’;proj4’]’;
+proj1=sparse([-1 -1 1 1])'/2;
+proj2=sparse([1 1 1 1])'/2;
+proj3=sparse([1 -1 -1 1])'/2;
+proj4=sparse([-1 1 -1 1])'/2;
+proj_columns=[proj1';proj2';proj3';proj4']';
 
 % Optimal single-shot POM (chapter 7)
-% proj1=sparse([1i 1 1 -1i])’/2;
-% proj2=sparse([-1i 1 1 1i])’/2;
-% proj3=sparse([1i -1 1 1i])’/2;
-% proj4=sparse([-1i -1 1 -1i])’/2;
-% proj_columns=[proj1’;proj2’;proj3’;proj4’]’;
+% proj1=sparse([1i 1 1 -1i])'/2;
+% proj2=sparse([-1i 1 1 1i])'/2;
+% proj3=sparse([1i -1 1 1i])'/2;
+% proj4=sparse([-1i -1 1 -1i])'/2;
+% proj_columns=[proj1';proj2';proj3';proj4']';
 
 % Parameter domain
 dim_theta=100;
@@ -73,10 +73,10 @@ amplitudes=zeros(size(proj_columns,2),dim_theta,dim_theta);
 amplitudes_sparse=zeros(dim_theta,dim_theta,size(proj_columns,2));
 for z1=1:dim_theta
   for z2=1:dim_theta
-    after_encoding=sparse(expm(-1i*(g1*theta1(z1)+g2*theta1(z2))))*initial_state;193
+    after_encoding=sparse(expm(-1i*(g1*theta1(z1)+g2*theta1(z2))))*initial_state;
     for x=1:size(proj_columns,2)
       povm_element=proj_columns(:,x);
-      amplitudes_temp=sparse(povm_element)’*sparse(after_encoding);
+      amplitudes_temp=sparse(povm_element)'*sparse(after_encoding);
       amplitudes(x,z1,z2)=amplitudes_temp;
       amplitudes_sparse(z1,z2,x)=amplitudes_temp;
     end
@@ -89,11 +89,11 @@ end
 % Likelihood function
 likelihood=amplitudes.*conj(amplitudes);
 if (1-sum(likelihood(:,1,1)))>1e-7
-  error(’The quantum probabilities do not sum to one.’)
+  error('The quantum probabilities do not sum to one.')
 end
 likelihood_sparse=amplitudes_sparse.*conj(amplitudes_sparse);
 if (1-sum(likelihood_sparse(1,1,:),3))>1e-7
-  error(’The quantum probabilities (sparse version) do not sum to one.’)
+  error('The quantum probabilities (sparse version) do not sum to one.')
 end
 
 % Prior probability
@@ -157,17 +157,17 @@ for index_out1=1:dim_theta_out
         prob_temp=sparse(prob_temp);
 
         % Bayes estimator for the first parameter
-        theta_expe1=trapz(theta1,trapz(theta2,prob_temp,2).*theta1’,1);
-        theta2_expe1=trapz(theta1,trapz(theta2,prob_temp,2).*theta1’.ˆ2,1);
-        epsilon_n1(runs)=theta2_expe1-theta_expe1ˆ2;
+        theta_expe1=trapz(theta1,trapz(theta2,prob_temp,2).*theta1',1);
+        theta2_expe1=trapz(theta1,trapz(theta2,prob_temp,2).*theta1'.^2,1);
+        epsilon_n1(runs)=theta2_expe1-theta_expe1^2;
 
         % Bayes estimator for the second parameter
         theta_expe2=trapz(theta2,trapz(theta1,prob_temp,1).*theta2,2);
-        theta2_expe2=trapz(theta2,trapz(theta1,prob_temp,1).*theta2.ˆ2,2);
-        epsilon_n2(runs)=theta2_expe2-theta_expe2ˆ2;
+        theta2_expe2=trapz(theta2,trapz(theta1,prob_temp,1).*theta2.^2,2);
+        epsilon_n2(runs)=theta2_expe2-theta_expe2^2;
 
         % Off-diagonal terms (the covariance matrix is symmetric)
-        theta2_offdia=trapz(theta1,trapz(theta2,prob_temp.*theta2,2).*theta1’,1);
+        theta2_offdia=trapz(theta1,trapz(theta2,prob_temp.*theta2,2).*theta1',1);
         epsilon_n_offdia(runs)=theta2_offdia-theta_expe1*theta_expe2;
 
       end
@@ -195,15 +195,14 @@ end
 observations=1:1:mu_max;
 
 % Fisher information matrix
-F11=4*(initial_state’*g1ˆ2*initial_state-(initial_state’*g1*initial_state)ˆ2);
-F12=4*(initial_state’*g1*g2*initial_state-(initial_state’*g1*initial_state)*(initial_state’*g2*initial_state));
-F21=4*(initial_state’*g2*g1*initial_state-(initial_state’*g2*initial_state)*(initial_state’*g1*initial_state));
-F22=4*(initial_state’*g2ˆ2*initial_state-(initial_state’*g2*initial_state)ˆ2);
+F11=4*(initial_state'*g1^2*initial_state-(initial_state'*g1*initial_state)^2);
+F12=4*(initial_state'*g1*g2*initial_state-(initial_state'*g1*initial_state)*(initial_state'*g2*initial_state));
+F21=4*(initial_state'*g2*g1*initial_state-(initial_state'*g2*initial_state)*(initial_state'*g1*initial_state));
+F22=4*(initial_state'*g2^2*initial_state-(initial_state'*g2*initial_state)^2);
 F=[F11 F12; F21 F22];
 
 % Quantum Cramer-Rao bound
 qcrb=trace(G/F)./(observations);
 
 % Save results
-%save(’qnetwork_results.txt’,’observations’,’epsilon_trials’,’qcrb’,.
-’-ascii’)
+%save(’qnetwork_results.txt’,’observations’,’epsilon_trials’,’qcrb’,'ascii')
