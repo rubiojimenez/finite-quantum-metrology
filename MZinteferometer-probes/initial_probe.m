@@ -33,10 +33,10 @@ zeta=asinh(sqrt(nbar/2)); % Squeezing parameter
 zent=log(2+sqrt(3));
 
 alphacat=0.960149; % Maximum Fisher information for the twin squeezed
-zcat=1.2145; % cat state
+zcat=1.2145;       % cat state
 
 %alphacat=1.09048; % Same Fisher information for the twin squeezed cat
-%zcat=1.1025; % state and the squeezed entangled state
+%zcat=1.1025;      % state and the squeezed entangled state
 
 if state_sel==1
   num_cutoff=20; % Cutoff for states
