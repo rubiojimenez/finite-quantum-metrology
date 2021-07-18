@@ -111,8 +111,8 @@ elseif pom_choice==5
   end
 
   % Extra phase shift
-  odd_shift=kron(identity(op_cutoff),expm(1i*(pi/2)*creation(op_cutoff)*creation(op_cutoff)’));
-  even_shift=kron(identity(op_cutoff),expm(1i*(pi/4)*creation(op_cutoff)*creation(op_cutoff)’));
+  odd_shift=kron(identity(op_cutoff),expm(1i*(pi/2)*creation(op_cutoff)*creation(op_cutoff)'));
+  even_shift=kron(identity(op_cutoff),expm(1i*(pi/4)*creation(op_cutoff)*creation(op_cutoff)'));
   if state_choice==1
     optimal_shift=odd_shift;
   else
