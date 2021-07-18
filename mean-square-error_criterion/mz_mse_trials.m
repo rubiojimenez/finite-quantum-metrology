@@ -4,11 +4,11 @@ function[epsilon_trials]=mz_mse_trials(state_choice,pom_choice,prior_width,prior
 % This programme calculates the mean square error as a function of the
 % number of repetitions.
 %
-% To run it, we need to specify the variables ’state_choice’, which
-% labels the initial state of a Mach-Zehnder interferometer; ’pom_choice’,
-% which selects the measurement scheme; ’phase_width’, which is the
-% width of a flat prior probability; ’phase_mean’, which is the centre
-% of its domain; and ’mu_max’, which is the maximum number of trials.
+% To run it, we need to specify the variables 'state_choice', which
+% labels the initial state of a Mach-Zehnder interferometer; 'pom_choice',
+% which selects the measurement scheme; 'phase_width', which is the
+% width of a flat prior probability; 'phase_mean', which is the centre
+% of its domain; and 'mu_max', which is the maximum number of trials.
 %
 % Note that this code relies on other MATLAB functions of our numerical
 % toolbox. The algorithm in this section has been exploited to calculate
@@ -19,7 +19,7 @@ function[epsilon_trials]=mz_mse_trials(state_choice,pom_choice,prior_width,prior
 % in chapter 8 and our analysis of the elapsed time, also in chapter 8.
   
 % Seed for the random generator
-rng(’shuffle’)
+rng('shuffle')
   
 % Initial state
 initial_state=initial_probe(state_choice);
@@ -34,11 +34,11 @@ dim_theta=1250;
 theta=linspace(a,b,dim_theta);
 num_steps=125;
 step=round(dim_theta/num_steps);
-if step-round(step)˜=0
-  disp(’Error: dim_theta divided by num_steps must be an integer.’)
+if step-round(step)~=0
+  disp('Error: dim_theta divided by num_steps must be an integer.')
   return
 elseif num_steps<3
-  disp(’Error: the approximation for the external theta integral needs three rectangles at least.’)
+  disp('Error: the approximation for the external theta integral needs three rectangles at least.')
 return
 end
 
@@ -54,15 +54,15 @@ for z=1:dim_theta
   after_phase_shift=sparse(phase_shift_diff(op_cutoff,theta(z))*initial_state);
   for x=1:length(outcomes_space)
     povm_element=proj_columns(:,x);
-    amplitudes(x,z)=sparse(povm_element’*after_phase_shift);
+    amplitudes(x,z)=sparse(povm_element'*after_phase_shift);
   end
 end
 
 % Likelihood function
 likelihood=amplitudes.*conj(amplitudes);
-disp(’The likelihood function has been created.’)
+disp('The likelihood function has been created.')
 if (1-sum(likelihood(:,1)))>1e-7
-  error(’The quantum probabilities do not sum to one.’)
+  error('The quantum probabilities do not sum to one.')
 end
 
 % Prior probability
@@ -103,8 +103,8 @@ for index_real=1:step:dim_theta
 
       % Experimental square error
       theta_expe=trapz(theta,prob_temp.*theta);
-      theta2_expe=trapz(theta,prob_temp.*theta.ˆ2);
-      epsilon_n(runs)=theta2_expe-theta_expeˆ2;
+      theta2_expe=trapz(theta,prob_temp.*theta.^2);
+      epsilon_n(runs)=theta2_expe-theta_expe^2;
     end
 
     % Monte Carlo sum
