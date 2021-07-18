@@ -8,7 +8,7 @@
 % The initial state and the measurement scheme are those of a Mach-Zehnder
 % interferometer, and they can be selected from the respective MATLAB
 % functions in our interferometric toolbox by giving a value from 1 to 5
-% for ’state_choice’ and ’pom_choice’.
+% for 'state_choice' and 'pom_choice'.
 %
 % Important observations:
 %
@@ -16,7 +16,7 @@
 % symmetries of the likelihood that enable us to find the intrinsic
 % width can be visualised.
 %
-% - The variables ’prior_mean_1shot’ and ’prior_width_1shot’ are needed
+% - The variables 'prior_mean_1shot' and 'prior_width_1shot' are needed
 % to specify the optimal single-shot POM, but they do not affect the
 % other measurement schemes.
 %
@@ -61,7 +61,7 @@ for z=1:dim_theta
   after_phase_shift=sparse(phase_shift_diff(op_cutoff,theta(z))*initial_state);
   for x=1:length(outcomes_space)
     pom_element=proj_columns(:,x);
-    amplitudes(x,z)=sparse(pom_element’*after_phase_shift);
+    amplitudes(x,z)=sparse(pom_element'*after_phase_shift);
   end
 end
 
@@ -100,11 +100,11 @@ for runs=1:100
 
   % Posterior probability plots
   if runs==1
-    plot(theta,prob_temp,’k-’,’LineWidth’,2.5)
+    plot(theta,prob_temp,'k-','LineWidth',2.5)
     hold on
-  elseif runs==2; plot(theta,prob_temp,’k-’,’LineWidth’,2.5)
-  elseif runs==10; plot(theta,prob_temp,’k-’,’LineWidth’,2.5)
-  elseif runs==100; plot(theta,prob_temp,’k-’,’LineWidth’,2.5)
+  elseif runs==2; plot(theta,prob_temp,'k-','LineWidth',2.5)
+  elseif runs==10; plot(theta,prob_temp,'k-','LineWidth',2.5)
+  elseif runs==100; plot(theta,prob_temp,'k-','LineWidth',2.5)
     hold off
   end
 end
@@ -112,10 +112,10 @@ end
 % Plot specifications
 grid
 fontsize=21;
-set(gcf,’units’,’points’,’position’,[250,50,550,400])
-xlabel(’$\theta$’,’Interpreter’,’latex’,’FontSize’,fontsize)
-ylabel(’$p(\theta | \textbf{\textit{m}})$’,’Interpreter’,’latex’,’FontSize’,fontsize)
+set(gcf,'units','points','position',[250,50,550,400])
+xlabel('$\theta$','Interpreter','latex','FontSize',fontsize)
+ylabel('$p(\theta | \textbf{\textit{m}})$','Interpreter','latex','FontSize',fontsize)
 xticks([0 pi/2 pi 3*pi/2 2*pi])
-xticklabels({’0’,’\pi/2’,’\pi’, ’3\pi/2’,’2\pi’})
+xticklabels({'0','\pi/2','\pi','3\pi/2','2\pi'})
 xlim([min(theta) max(theta)])
-set(gca, ’FontSize’, fontsize,’FontName’,’Times New Roman’)
+set(gca,'FontSize', fontsize,'FontName','Times New Roman')
