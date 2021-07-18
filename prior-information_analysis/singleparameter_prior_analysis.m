@@ -52,8 +52,7 @@ index_real=160;
 % Measurement scheme
 prior_mean_1shot=0;
 prior_width_1shot=pi/2;
-[outcomes_space,proj_columns] = mz_pom(state_choice,pom_choice,.
-prior_width_1shot,prior_mean_1shot);
+[outcomes_space,proj_columns] = mz_pom(state_choice,pom_choice,prior_width_1shot,prior_mean_1shot);
 
 % State after the phase shift, final state and amplitudes
 amplitudes=zeros(length(outcomes_space),dim_theta);
@@ -78,7 +77,7 @@ for runs=1:100
   
   % Simulation of an interferometric experiment
   prob_sim=likelihood(:,index_real);
-  cumulative1 = cumsum(prob_sim); % Cumulative function
+  cumulative = cumsum(prob_sim); % Cumulative function
   prob_rand=rand; % Random selection
   auxiliar=cumulative-prob_rand;
 
@@ -91,7 +90,7 @@ for runs=1:100
   end
 
   % Posterior density function
-  prob_temp=sparse(prob_temp.*likelihood(index1,:));
+  prob_temp=sparse(prob_temp.*likelihood(index,:));
   if trapz(theta,prob_temp)>1e-16
     prob_temp=prob_temp./trapz(theta,prob_temp);
   else
