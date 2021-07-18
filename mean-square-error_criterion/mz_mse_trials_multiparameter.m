@@ -1,5 +1,5 @@
 % Mean square error for the estimation of two linear functions
-%
+% 
 % The estimation scheme is a quantum sensing network with two qubits.
 %
 % Note that we use the trapezoidal rule ’trapz’ for the inner parameter
