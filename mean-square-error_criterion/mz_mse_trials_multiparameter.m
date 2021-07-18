@@ -6,6 +6,12 @@
 % integrals because these have peaked integrands, while Simpson's Rule
 % 'simps' is a better choice when this problem does not arise, which is
 % the case for the outer parameter integrals.
+%
+% The 'simps' function employed in this code can be found in
+%
+%   Damien Garcia (2021). Simpson's rule for numerical integration 
+%   (https://www.mathworks.com/matlabcentral/fileexchange/25754-simpson-s-rule-for-numerical-integration),
+%   MATLAB Central File Exchange. Retrieved July 18, 2021.
 clear
 
 % Initial parameters
