@@ -34,7 +34,7 @@ for x1=1:sqrt(length(initial_state))
           sin_temp=sin(comp_temp*phase_width/4);
           cos_temp=cos(comp_temp*phase_width/4);
           K=4*exp_temp*sin_temp/comp_temp;
-          L=exp_temp*(4*phase_mean*sin_temp/comp_temp+1i*2*phase_width*cos_temp/comp_temp - 1i*8*sin_temp/comp_tempˆ2);
+          L=exp_temp*(4*phase_mean*sin_temp/comp_temp+1i*2*phase_width*cos_temp/comp_temp - 1i*8*sin_temp/comp_temp^2);
         end
         kvec(index)=K/phase_width;
         lvec(index)=L/phase_width;
@@ -50,7 +50,7 @@ initial_rho=kron(initial_state,initial_state');
 rho=initial_rho.*kmat; rhobar=initial_rho.*lmat;
 rho=full(rho); rhobar=full(rhobar);
 
-% Eigenvalues and eigenvectors of ’rho’
+% Eigenvalues and eigenvectors of 'rho'
 [psik, pk] = eigs(rho,rank(rho));
 psik=sparse(psik);
 pk=sparse(pk);
@@ -60,7 +60,7 @@ for x=1:length(pk)
   pkvec(x)=pk(x,x);
 end
 
-% ’rhobar’ in the eigenbasis of ’rho’
+% 'rhobar' in the eigenbasis of 'rho'
 rhobarnew=psik'*rhobar*psik;
 
 % Optimal single-shot strategy: projectors and outcomes
@@ -96,7 +96,7 @@ phase=linspace(phase_mean-phase_width/2,phase_mean+phase_width/2,1000);
 % Optimal single-shot mean square error
 bayes_bound=trapz(phase,phase.*phase)/phase_width - trace(Sopt*Sopt*rho);
 if imag(bayes_bound)<1e-10; bayes_bound=real(bayes_bound);
-else176
+else
   error('The mean square error must be real. Check the cutoff in the intermediate calculations.')
   return
 end
