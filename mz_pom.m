@@ -20,7 +20,7 @@ op_cutoff=sqrt(length(initial_probe(state_choice)));
 
 if pom_choice==1
   % 1) Optimal single-shot POM
-  [~,outcomes,proj_columns,~,,~,~,~,~]=mz_optimal_1trial(initial_probe(state_choice),phase_width,phase_mean);
+  [~,outcomes,proj_columns,~,~,~,~,~,~]=mz_optimal_1trial(initial_probe(state_choice),phase_width,phase_mean);
 
 elseif pom_choice==2
   % 2) 50:50 beam splitter + photon counting
