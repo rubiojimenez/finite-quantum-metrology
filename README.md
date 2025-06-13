@@ -1,4 +1,4 @@
-# Finite-sample quantum metrology
+# Code repository for *Non-asymptotic quantum metrology*
 
 Collection of scripts implementing a finite-sample approach to quantum metrology, as developed in:
 
