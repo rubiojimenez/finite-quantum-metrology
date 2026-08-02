@@ -1,9 +1,8 @@
-# Code repository for *Non-asymptotic quantum metrology*
+# Non-asymptotic quantum metrology
 
-Collection of scripts implementing a finite-sample approach to quantum metrology, as developed in:
+This repository contains the LaTeX source of a curated version of my PhD thesis, together with the accompanying code.
 
-J. Rubio Jiménez, *Non-asymptotic quantum metrology: extracting maximum information from limited data*, PhD thesis, University of Sussex (2020). Available at [arXiv:1912.02324](https://arxiv.org/abs/1912.02324).
+> J. Rubio Jiménez, *Non-asymptotic quantum metrology: extracting maximum information from limited data*, PhD thesis, University of Sussex (2020). Available as **arXiv:1912.02324** and **EThOS: uk.bl.ethos.801042**.
 
-While these scripts were originally developed for the examples presented in the thesis, they may be adapted to a wide range of modern quantum metrology problems.
-
-This is the original and curated version of the code. A static archival mirror, preserving citation compatibility with the published thesis, is available at: [https://github.com/jesus-rubiojimenez/QuMetrology-finite](https://github.com/jesus-rubiojimenez/QuMetrology-finite)
+The accompanying code implements a finite-sample approach to quantum metrology developed in the thesis. 
+Although originally written for the examples presented therein, it can be adapted to a wide range of quantum metrology problems.
