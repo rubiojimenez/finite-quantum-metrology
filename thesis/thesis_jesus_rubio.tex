@@ -1,0 +1,635 @@
+\pdfoutput=1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PhD Thesis - final version
+% 
+% Jesús Rubio Jiménez 
+% Department of Physics and Astronomy
+% University of Sussex
+% September 2019
+%
+% The style of this document follows the requirements imposed by the 
+% University of Sussex in
+%
+% http://www.sussex.ac.uk/rsao/examination/
+%
+% This version: Final version, single line-spacing, one-sided. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Doctor of Philosophy
+%
+% For the award of the Doctor of Philosophy, the thesis has to make a 
+% substantial original contribution to knowledge or understanding.
+%
+% More information available in: https://www.sussex.ac.uk/rsao/examiners
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Quality Assurance Agency descriptors for the award of qualifications at
+% the doctoral level
+%
+% Doctorates are awarded to students who have demonstrated:
+%
+% - the creation and interpretation of new knowledge, through original 
+% research or other advanced scholarship, of a quality to satisfy peer 
+% review, extend the forefront of the discipline, and merit publication;
+%
+% - a systematic acquisition and understanding of a substantial body of 
+% knowledge which is at the forefront of an academic discipline or area 
+% of professional practice;
+%
+% - the general ability to conceptualise, design and implement a project 
+% for the generation of new knowledge, applications or understanding at 
+% the forefront of the discipline, and to adjust the project design in 
+% the light of unforeseen problems;
+% 
+% - a detailed understanding of applicable techniques for research and
+% advanced academic enquiry.
+% 
+% Typically, holders of the qualification will be able to:
+%
+% - make informed judgements on complex issues in specialist fields, 
+% often in the absence of complete data, and be able to communicate their 
+% ideas and conclusions clearly and effectively to specialist and
+% non-specialist audiences;
+% 
+% -continue to undertake pure and/or applied research and development at
+% an advanced level, contributing substantially to the development of 
+% new techniques, ideas or approaches;
+%
+% and will have:
+%
+% - the qualities and transferable skills necessary for employment 
+% requiring the exercise of personal responsibility and largely autonomous
+% initiative in complex and unpredictable situations, in professional 
+% or equivalent environments.
+%    
+% More information available in: https://www.sussex.ac.uk/rsao/examiners
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% General presentation checks:
+%
+%   - All chapters/sections are present and complete, correctly numbered 
+%   and in the correct order.
+%
+%   - Tables of contents, etc. are present and correct.
+%
+%   - All Figures and Tables are present, inserted in the correct place, 
+%   have an appropriate title and legend where necessary, and are in 
+%   final form and appropriately numbered.
+%
+%   - A minimum font size of not less than 9 is suggested after insertion
+%   of a Figure into the main text of the thesis.
+%
+%   - The text has been carefully checked to remove typographical, 
+%   spelling and grammatical errors. As complete elimination is very 
+%   difficult insertion of a few corrections at a later stage is usually
+%   allowed, although please be advised more than one error per page is 
+%   not considered acceptable.
+%
+%   - The bibliography is presented in an acceptable format, your 
+%   supervisor should be able to advise you further.
+%
+%   - References are cited accurately, and every reference cited in the 
+%   text is given in the bibliography and vice-versa.
+%
+%   - All pages are present and correctly numbered and located.
+%
+%   - You have correctly set out subject-specific aspects such as 
+%   statistical analyses, formulae or quotations.
+
+% Editing and proof reading - advisory note:
+%
+% You may wish to retain the services of a proof reader or editor to 
+% assist you in completing a draft of your thesis. A thesis presented 
+% for examination in an incomplete or poor form could result in the 
+% examiners being unable to assess the academic work properly.
+
+
+% Document style (Formatting and layout declarations)
+%
+% i) Paper:
+%   - A4 and of good quality.
+%   - There is no size restriction on drawings, map and similar documents.
+%
+% ii) Typeface: The typeface should be clear and easy to read.
+%
+% iii) Printing: on one side of the paper only
+%
+% iv) Margins:
+%    a) the left-hand-side should be 4cm
+%    b) the top and bottom margins should be 2.5cm deep
+%    c) the right hand margin should be 2cm
+%
+% Note that:
+%
+% Command            11pt    12pt
+% \tiny              6       6
+% \scriptsize        8       8
+% \footnotesize      9       10
+% \small             10      10.95
+% \normalsize        10.95   12
+% \large             12      14.4
+% \Large             14.4    17.28
+% \LARGE             17.28   20.74
+% \huge              20.74   24.88
+% \Huge              24.88   24.88
+%
+% which, given the constraint for footnotes showed above, means that we 
+% cannot use a font size smaller than 11pt.
+\documentclass[a4paper,12pt,oneside]{report}
+% For my personal printed version: two-sided
+%\documentclass[a4paper,12pt,twoside]{report}
+\usepackage[top=2.5cm, bottom=2.5cm, left=4cm, right=2cm, headheight=15pt]{geometry}
+
+
+% Line spacing:
+%
+% - For the main text, double or one-and-a-half line-spacing.
+% - For indented quotations or footnotes, single line-spacing.
+%
+% 10pt
+%\newcommand{\linespacing}{1.667}
+%\newcommand{\linespacing}{1.25}
+%
+% 11pt
+%\newcommand{\linespacing}{1.618}
+%\newcommand{\linespacing}{1.213}
+%
+% 12pt
+%\newcommand{\linespacing}{1.655}
+%\newcommand{\linespacing}{1.241}
+%
+% Source: https://tex.stackexchange.com/questions/30073/why-is-the-linespread-factor-as-it-is 
+%
+% For my personal digital and printed versions: main text also with single line-spacing.
+\newcommand{\linespacing}{1}
+\renewcommand{\baselinestretch}{\linespacing}
+%
+% Note that these numbers are based on using Microsoft Word as the reference. 
+
+
+% Language: Apart from quotations, the thesis or portfolio should be written in English.
+\usepackage[british]{babel}
+
+
+% Graphics and visual style
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{enumerate} % Other formats for ennumerate
+\usepackage{rotating} % Rotate tables
+\flushbottom
+
+% Better control where figures are placed
+% 
+% Source: https://tex.stackexchange.com/questions/11366/how-can-i-get-the-figures-not-to-be-pushed-to-the-end-of-the-document
+
+\renewcommand{\topfraction}{.85}
+\renewcommand{\bottomfraction}{.7}
+\renewcommand{\textfraction}{.15}
+\renewcommand{\floatpagefraction}{.66}
+\renewcommand{\dbltopfraction}{.66}
+\renewcommand{\dblfloatpagefraction}{.66}
+\setcounter{topnumber}{9}
+\setcounter{bottomnumber}{9}
+\setcounter{totalnumber}{20}
+\setcounter{dbltopnumber}{9}
+
+% Pagination
+%
+% - Pages should be numbered consecutively through the main text, 
+% excluding photographs and/or diagrams which are not embodied in the
+% text.
+%
+% - Page numbers should be located centrally at the top of the page.
+\usepackage{fancyhdr}
+\fancypagestyle{plain}{
+	\fancyhf{} % Clear all header and footer fields
+	\fancyhead[C]{\thepage} % except the center
+	%
+	% Add "DRAFT: <today's date>" to header (comment out the following to remove)
+	%\lhead{\textit{DRAFT: \today}}
+	%
+	\chead{\thepage}
+	\renewcommand{\headrulewidth}{0pt}
+}
+\pagestyle{plain}
+
+
+% Physics and maths
+\usepackage{amssymb}
+\usepackage{physics} % It already loads amsmath
+\usepackage{bm}        
+\usepackage{verbatim} 
+
+
+% Bibliography style
+%
+% A composite bibliography should be presented at the end of the thesis 
+% after the main text and before any appendices. Individual bibliographies
+% for sub-divisions of the thesis should not be employed.
+% 
+% The composite bibliography should be:
+%
+%  - either numbered consecutively, as far as possible, in the same order 
+%  as references appear in the text, with numbers only in the text;
+%
+%  - or be placed in alphabetical order of authors, sub-divided 
+%  chronologically by year of publication, with authors' names and years 
+%  of publications in the text.
+%
+%  - In the latter case publications in the same year by the same author(s)
+%  should be distinguished in the bibliography and the text by letters
+%  in alphabetical sequence (e.g. 1979a, 1979b).
+%
+%  - Referencing system: please use the referencing system most prevalent
+%  in your discipline. The same referencing system should be used
+%  throughout the thesis.
+\usepackage[sort&compress,numbers]{natbib}
+%\bibliographystyle{apalike} % Alphabetical order of authors
+\bibliographystyle{unsrt} % Numerical order as they appear in the text
+
+% Hyperreferences
+
+% Digital version
+\usepackage[colorlinks=true, linkcolor=black!60!blue, citecolor=black!60!blue, urlcolor=black!60!blue]{hyperref} 
+\newcommand*{\boxcolor}{black!60!blue}
+
+% Printed version
+%\usepackage[colorlinks=true, linkcolor=black, citecolor=black, urlcolor=black]{hyperref} 
+%\newcommand*{\boxcolor}{black}
+
+\makeatletter
+\renewcommand{\boxed}[1]{\textcolor{\boxcolor}{
+\tikz[baseline={([yshift=-1ex]current bounding box.center)}] \node [rectangle, minimum width=2ex,rounded corners,draw] {\normalcolor\m@th$\displaystyle#1$};}}
+\makeatother
+
+
+%\usepackage{doi} % To activate the link to doi and arXiv pages (it does
+% not work with all styles)
+
+% Quote
+\usepackage{ragged2e} % This is needed to use \justify
+\usepackage{lmodern}
+\newlength\longest
+
+% Blank pages
+%
+% Certain pages should start with an odd page number, which can be done 
+% inserting blank pages where needed. 
+%
+% This is only to be used in the final printed version.
+\usepackage{afterpage}
+
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \newpage}
+
+% Numerical code formatting
+\usepackage{listings}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tblr,
+  language=Matlab,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3}
+  
+\definecolor{coolblack}{rgb}{0.0, 0.18, 0.39}  
+
+\lstnewenvironment{mathematicathesis}
+  {\lstset{
+  tabsize=3,
+  frame=tblr, 
+  language=Mathematica,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{black},
+  commentstyle=\color{coolblack},
+  showstringspaces=false,
+  mathescape=true}}
+{} 
+  
+% Other declarations
+\graphicspath{{./figures/}}
+\usepackage{subcaption}
+\usepackage{diagbox}
+\usepackage{csquotes}
+\usepackage{mathtools}
+\usepackage{cleveref}
+\usepackage{framed}
+%\usepackage[multiple]{footmisc}
+\usepackage{placeins}
+
+% A nicer transpose: \transpose
+\makeatletter
+\newcommand*{\transpose}{%
+  {\mathpalette\@transpose{}}%
+}
+\newcommand*{\@transpose}[2]{%
+  % #1: math style
+  % #2: unused
+  \raisebox{\depth}{$\m@th#1\intercal$}%
+}
+\makeatother
+
+\newcommand*{\test}[1]{%
+  \[
+    \mathbf{M}^{#1}
+    \;
+    \scriptstyle \mathbf{M}^{#1}
+    \;
+    \scriptscriptstyle \mathbf{M}^{#1}
+  \]
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Body of the document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+% Roman page numbering
+\pagenumbering{roman}
+
+%------------------------------------------------------------------------
+% Title page
+%------------------------------------------------------------------------
+% The title page should give the following information:
+%	(i) the full title of the thesis and the sub-title if any;
+%	(ii) the full name of the author;
+%	(iii) the qualification aimed for;
+%	(iv) the name of the University of Sussex;
+%	(v) the month and year of submission.
+\thispagestyle{empty}
+\begin{flushright}
+\includegraphics[width=6cm]{us_logo}
+\end{flushright}	
+\vskip40mm
+\begin{center}
+
+% Title
+\LARGE\textbf{Non-asymptotic quantum metrology}
+\vskip2mm
+
+% Subtitle (optional)
+\Large\textit{Extracting maximum information from limited data}
+\vskip10mm
+
+% Author
+\Large
+\textbf{Jes\'{u}s Rubio Jim\'{e}nez}
+\normalsize
+
+% Department and university
+\large
+\vskip30mm
+Department of Physics \& Astronomy \\
+\vskip4mm
+University of Sussex \\
+\end{center}
+\vfill
+\begin{flushleft}
+\large
+
+% Qualification
+Submitted for the degree of Doctor of Philosophy \\
+
+% Date of submission
+July 2019
+\end{flushleft}		
+%------------------------------------------------------------------------
+
+%\afterpage{\blankpage}
+
+%------------------------------------------------------------------------
+% Declaration
+%------------------------------------------------------------------------
+\chapter*{\vspace{-1cm}Declaration}
+I hereby declare that, unless otherwise indicated, the results presented in this thesis are the product of my own independent research, and that, to the best of my knowledge, all the relevant sources have been appropriately acknowledged. In addition, this thesis has not been and will not be submitted in whole or in part to another University for the award of any other degree.
+
+Some of these results have already been published or are available in a preprint:
+\begin{enumerate}
+\item \emph{Non-asymptotic analysis of quantum metrology protocols beyond the Cram\'{e}r-Rao bound}, \underline{Jes\'{u}s Rubio}, Paul Knott and Jacob Dunningham, J. Phys. Commun. 2 015027 (2018).
+\item \emph{Quantum metrology in the presence of limited data}, \underline{Jes\'{u}s Rubio} and Jacob Dunningham, New J. Phys. 21 043037 (2019).
+\item \emph{Designing quantum experiments with a genetic algorithm}, Rosanna Nichols, Lana Mineh, \underline{Jes\'{u}s Rubio}, Jonathan C. F. Matthews and Paul A. Knott, Quantum Sci. Technol. 4 045012 (2019).
+\item \emph{Bayesian multi-parameter quantum metrology with limited data}, \underline{Jes\'{u}s Rubio} and Jacob Dunningham, arXiv:1906.04123 (2019).
+\end{enumerate}
+I confirm that I am responsible for the calculations and contents in works $1$, $2$ and $4$, where the co-authors provided invaluable support and guidance by discussing the results, verifying the methods and proposing changes to enhance the quality of the manuscripts. Regarding work $3$, my contribution was twofold. On the one hand, I prepared a Matlab module with a Bayesian fitness function to be included within the AdaQuantum algorithm. On the other hand, I performed the Bayesian analysis of some of the experimental designs produced by this algorithm. 
+
+Finally, some of the asymptotic results for sensor-symmetric networks in chapter \ref{chap:networks} were partially obtained in collaboration with Paul Knott, Timothy Proctor and Jacob Dunningham, while I was fully responsible for the Bayesian calculations. 
+
+%\vskip5mm
+%Signature:
+\vskip10mm
+
+% Author
+\raggedleft Jes\'{u}s Rubio Jim\'{e}nez
+%------------------------------------------------------------------------
+
+%\afterpage{\blankpage}
+
+%------------------------------------------------------------------------
+% Summary/ Abstract
+%------------------------------------------------------------------------
+% The summary or abstract should provide a synopsis of the thesis, should
+% clearly state the nature and scope of the research undertaken and 
+% contribution made to the knowledge of the subject. It should include a 
+% brief statement of the method of investigation where appropriate, an 
+% outline of the major divisions or principal arguments of the work and 
+% a summary of any conclusions reached.
+% 
+% Your summary may be single spaced [...] and must not exceed 300 words.
+%
+% 
+% Each summary should include a heading set out in the following style:
+%
+%   UNIVERSITY OF SUSSEX
+%
+%   YOUR FULL NAME
+%
+%   DEGREE FOR WHICH THE THESIS OR PORTFOLIO IS SUBMITTED
+%
+%   TITLE OF THESIS OR PORTFOLIO SUMMARY
+\thispagestyle{empty}
+\newpage
+\null\vskip10mm
+\begin{center}
+\large
+\underline{UNIVERSITY OF SUSSEX}
+\vskip20mm
+
+% Author and qualification
+\textsc{Jes\'{u}s Rubio Jim\'{e}nez, Doctor of Philosophy}
+\vskip20mm
+
+% Title
+\underline{\textsc{Non-asymptotic quantum metrology}}
+\vskip0mm
+
+% Subtitle (optional)
+\underline{\textsc{Extracting maximum information from limited data}}
+\vskip20mm
+\underline{\textsc{Summary}}
+\vskip2mm
+\end{center}
+
+% Line spacing
+\renewcommand{\baselinestretch}{1.0}
+\small\normalsize
+
+% Summary:
+\justify{Science relies on our practical ability to extract information from reality, since processing this information is essential for developing theories that explain our world. This thesis is precisely the study of how to extract and process information using quantum systems when a constrained amount of resources means that the available data is limited. The natural framework for this task is quantum metrology, a set of tools to model and design quantum measurement strategies. Equipped with this theory, we advocate a Bayesian approach as the appropriate formalism to study systems with a finite amount of resources, which is a non-asymptotic problem, and we propose a methodology for non-asymptotic quantum metrology. To start with, we show the consistency of taking those solutions that are optimal in the asymptotic regime of many trials as a guide to calculate a generalised measure of uncertainty in the Bayesian framework. This provides an approximate but useful way of studying the non-asymptotic regime whenever a direct Bayesian optimisation is intractable, and it avoids non-physical results that can arise when only the asymptotic theory is employed. Secondly, we construct a new non-asymptotic Bayesian bound without relying on the previous approximation by first selecting the optimal quantum strategy for a single shot, and then simulating a sequence of repetitions of this scheme, which is suitable for experiments where we do not wish or cannot correlate different trials. These methods are applied to a Mach-Zehnder interferometer, which is a single-parameter problem, and to quantum sensing networks where the nodes are either qubits or optical modes, which are multi-parameter protocols. Our results provide a detailed characterisation of how the interplay between prior information, entanglement and a limited amount of data affects the performance of quantum metrology protocols, which has important implications for the analysis of theory and experiments in this field.}
+%------------------------------------------------------------------------
+
+%\afterpage{\blankpage}
+
+%------------------------------------------------------------------------
+% Quote
+%------------------------------------------------------------------------
+\clearpage
+
+\thispagestyle{empty}
+
+\vspace*{5cm} 
+\begin{quote} 
+\centering 
+
+\parbox{10cm}{
+  {\center\normalsize\itshape
+To those who dedicate their lives to pursue the path of knowledge with kindness and honesty, and without ever ceasing to seek the best approximation to the truth.
+  \par\bigskip}
+  %\raggedleft\small\MakeUppercase{The author}
+  \par} 
+  
+\end{quote}
+\vspace*{\fill}
+
+\clearpage
+%------------------------------------------------------------------------
+
+%\afterpage{\blankpage}
+
+%------------------------------------------------------------------------
+% Acknowledgements
+%------------------------------------------------------------------------
+\chapter*{Acknowledgements}
+\renewcommand{\baselinestretch}{\linespacing}
+\small\normalsize
+
+Those of us who find meaning in creating and understanding often tend to enjoy the pleasure of a good challenge, and a doctoral thesis has proven to be one of the best. I feel very grateful for this fantastic opportunity, which would not have been possible without my supervisor Jacob Dunningham. He not only gave me the chance to live in another country and join his group at Sussex, but he has also provided excellent guidance, full of insights and ideas. From our many discussions I have learned a very natural and intuitive way of doing physics, and it has been a pleasure to work in such friendly company. 
+
+It has also been fantastic working and discussing physics with the rest of the group - Paul, Simon, Anthony, James, Michail and Sam. Paul's guidance, always full of optimism, was invaluable during his time as my second supervisor, and I have benefited enormously from our collaborations (my current appreciation of numerical techniques would have not happened without his help!).
+
+I am indebted to collaborators and friends - Alfredo, Tim, George, Dominic, Matthew, Jasminder, Christos, Francesco and many others - who through many interesting discussions have helped me to refine my ideas, and to develop them further. I would also like to thank Dimitrios for his help with the mathematical literature of probability theory, and Petr for introducing me to Jaynes's work; my thesis would have been very different without it. These interactions have been possible thanks to attending many interesting conferences, which I was able to do thanks to the generous financial support provided by the University of Sussex and the South East Physics Network (SEPnet) to complete my PhD.
+
+Working towards my PhD at Sussex has been a great experience. Its friendly staff are always ready to be helpful, and its library is superb. In fact, the library has been an invaluable source of material during development of many sections of this thesis. It has been a great pleasure meeting many fascinating people, and to have had the opportunity of developing many activities. There was always time to chat with Luc\'{i}a and let the idealists inside us to run free, to have entertaining discussions and share experiences with Harry, Nick and Jean-Marc, or to run teaching workshops with Reece. And I enormously enjoyed every session of our AMO Theory Club - Pedro, Samuel, Graham, Charlie, Michail, Kathryn and Germ\'{a}n - which was always an excellent opportunity to learn something new beyond our thesis topics. I would also like to thank Kathryn for having read some of the sections of my preliminary drafts.  
+
+Last but not least, I would like to thank all the people who have also supported my project both from home and from many other parts of the world: Isabel and Alfredo, for our fantastic meetings when I visit Madrid; In\'{e}s and Eli, for a friendship that never ends; H\'{e}ctor, because indeed great minds think alike; Anah\'{i}, for always being so trustworthy; Ana, for always being open to the world; Pablo, for our conversations about life; and my family, for your support no matter where we are.  
+
+Thanks to all of you.
+
+%------------------------------------------------------------------------
+
+%%\afterpage{\blankpage}
+
+%------------------------------------------------------------------------
+% Table of contents and lists of tables and figures
+%------------------------------------------------------------------------
+% A table of contents should be included in the thesis and should list in
+% sequence with the page numbers all relevant sub-divisions of the thesis 
+% including:
+%  - the titles of chapters,
+%  - sections and paragraphs as appropriate,
+%  - the bibliography,
+%  - the list of abbreviations and other functional parts of the thesis,
+%  - any appendices and the index (if provided).
+\newpage
+\pdfbookmark[0]{Contents}{contents_bookmark}
+\tableofcontents 
+%\afterpage{\blankpage}
+\listoftables
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Tables}
+%\afterpage{\blankpage}
+\listoffigures
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Figures}
+%\afterpage{\blankpage}
+%------------------------------------------------------------------------
+
+% %\afterpage{\blankpage} % Add if needed so that chapter 1 starts in an
+% odd number page. 
+
+%------------------------------------------------------------------------
+% Chapters
+%------------------------------------------------------------------------
+% Arabic page numbering
+\newpage
+\pagenumbering{arabic}
+
+% Chapters
+\input{chapters/chapter1}
+%\afterpage{\blankpage}
+\input{chapters/chapter2}
+\input{chapters/chapter3}
+\input{chapters/chapter4}
+\input{chapters/chapter5}
+%\afterpage{\blankpage}
+\input{chapters/chapter6}
+\input{chapters/chapter7}
+%\afterpage{\blankpage}
+\input{chapters/chapter8}
+\input{chapters/chapter9}
+%------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------
+% Bibliography 
+%------------------------------------------------------------------------
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{phd_references_04012020}
+%------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------
+% Appendices
+%------------------------------------------------------------------------
+%\afterpage{\blankpage}
+\appendix
+\include{appendices/appendixA}
+%\afterpage{\blankpage}
+\include{appendices/appendixB}
+\include{appendices/appendixC}
+%------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Thesis completed!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

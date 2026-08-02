@@ -1,0 +1,494 @@
+\chapter{Towards a non-asymptotic methodology}
+\label{chap:methodology}
+
+In this chapter we present the strategy that we will follow to construct our non-asymptotic methodology for quantum metrology. Some of the results that we use to motivate and justify such strategy are new, although at this stage we still need to rely on known ideas that are already available in the literature.
+
+\section{Formulation of the problem}
+\label{sec:problem}
+
+The basic information needed for the estimation problems that we find in quantum metrology is encoded in the joint probability
+\begin{eqnarray}
+P\left[E(d\boldsymbol{m}) \land \varrho(d\boldsymbol{\theta}) | I_0\right] = p(\boldsymbol{\theta})\mathrm{Tr}\left[E(\boldsymbol{m})\varrho(\boldsymbol{\theta}) \right] d\boldsymbol{\theta} d\boldsymbol{m},
+\label{basicinfo}
+\end{eqnarray}
+where $p(\boldsymbol{\theta})$ is the prior probability and we have used both the Born rule $p(\boldsymbol{m}|\boldsymbol{\theta}) = \mathrm{Tr}\left[E(\boldsymbol{m})\varrho(\boldsymbol{\theta})\right]$ and the fact that $p(\boldsymbol{\theta}, \boldsymbol{m}) = p(\boldsymbol{\theta}) p(\boldsymbol{m}|\boldsymbol{\theta})$. More concretely, we have the following propositions:
+\begin{itemize}
+\item[i)] $E(d\boldsymbol{m})$, with $\boldsymbol{m} = (m_1, \dots, m_\mu)$, indicates that the measurement scheme $E$ generates $\mu$ observations with outcomes lying within $\boldsymbol{m}$ and $\boldsymbol{m} + d\boldsymbol{m}$. The set of outcomes $\boldsymbol{m}$ is the empirical data. 
+\item [ii)] $\varrho(d\boldsymbol{\theta})$, with $\boldsymbol{\theta} = (\theta_1, \dots, \theta_d)$, represents the fact that the interaction between an external system that we wish to study and the initial probe $\varrho_0$ encodes in our scheme $d$ parameters with values lying within $\boldsymbol{\theta}$ and $\boldsymbol{\theta} + d\boldsymbol{\theta}$. The number of unknown parameters is the dimension of the estimation problem\footnote{Notice that this is different from the dimension of the space where the operators that represent states and measurements are defined.}. 
+\item [iii)] $I_0$ is the prior information. We can split it as $I_0 = \Omega_{\boldsymbol{m}} \land \Omega_{\boldsymbol{\theta}} \land I_{\mathrm{exp}}$, where
+\begin{itemize}
+\item[a)] $\Omega_{\boldsymbol{m}}$ and $\Omega_{\boldsymbol{\theta}}$ indicate the values that the experimental outcomes and parameters can take when we only know the physical nature of the quantities that they represent.
+\item[b)] $I_{\mathrm{exp}}$ represents the operational information that maps our actions in the laboratory with the mathematical representation for states, measurements and the mechanism that encodes the parameters in the probe, as well as any further prior knowledge that we may have about the external system that we wish to sense and whose properties are represented by the parameters\footnote{The proposition $I_0$ is normally omitted in quantum metrology discussions. However, the information that it encodes is crucial to implement theoretical protocols in real life, and in practice it is always implicitly taken into account. By making it explicit and giving it a formal representation inside the theory we can keep track of the assumptions that go into our calculations in an economical way. Although a study of the practical implementation of our results is beyond the scope of this thesis, we will still use $I_0$ to make the assignment of the prior probability $p(\boldsymbol{\theta})$ more transparent.}.
+\end{itemize}
+\end{itemize}
+In short, the likelihood function $p(\boldsymbol{m}|\boldsymbol{\theta})$ encodes the information about the process that generates the outcomes and its relationship with the parameters, while the prior $p(\boldsymbol{\theta})$ includes what is known about $\boldsymbol{\theta}$ before the experiment is performed. It is important to observe that while the likelihood model is given by the laws of quantum mechanics, the prior probability must be assigned by other means. A practically motivated procedure to select priors will be developed in chapter \ref{chap:nonasymptotic}.
+
+While the previous description is completely general, our study will be focused on identical and independent experiments. Hence, our calculations will be based on a specific partition of the space of operators where 
+\begin{equation}
+\varrho(\boldsymbol{\theta})=\smash[b]{ \underbrace{\rho(\boldsymbol{\theta}) \otimes \cdots \otimes \rho(\boldsymbol{\theta})\,}_\text{$\mu$ times}}
+\label{icopies}
+\end{equation}
+and 
+\begin{equation}
+E(\boldsymbol{m}) = E(m_1)\otimes \cdots \otimes E(m_\mu).
+\label{iidpom}
+\end{equation}
+As a consequence, the likelihood function becomes
+\begin{equation}
+p(\boldsymbol{m}|\boldsymbol{\theta}) = \prod_{i=1}^{\mu}p(m_i|\boldsymbol{\theta}) =\prod_{i=1}^{\mu} \mathrm{Tr}\left[E(m_i)\rho(\boldsymbol{\theta})\right].
+\label{iidlikelihood}
+\end{equation}
+This configuration can model either repetitions of a given experiment, or a collection of $\mu$ copies of some system where independent and identical measurements are performed. We will normally describe our results in terms of the first picture, although both are mathematically equivalent. Note that states and measurements describing a single repetition or copy can still be entangled with respect to its internal structure, as we saw in section \ref{sec:qmetrology}. 
+
+The motivation to select the class of schemes specified in equations (\ref{icopies} - \ref{iidlikelihood}) is twofold. On the practical side, strategies where the same scheme is repeated several times are relevant for any experimental arrangement where we cannot or do not wish to correlate different runs, which include a wide range of practical scenarios. On the other hand, having a sequence of repetitions is an intuitive way of examining the transition from the regime of limited data that we wish to explore, to the asymptotic regime of many trials, and this transition is crucial to define the non-asymptotic regime. In addition, this assumption greatly simplifies the complex numerical calculations involved in Bayesian scenarios. Admittedly, there are other interesting practical possibilities that emerge when we allow for POMs that do not satisfy the constraint in equation (\ref{iidpom}), or for a collection of states that are not identical. For instance, we could consider adaptive schemes, where the strategy for each new trial is selected taking into account the information provided by the previous outcome \citep{berry2000, esteban2017, lumino2017}, and they could be a better choice in some scenarios. These techniques are beyond the scope of this work, although in chapter \ref{chap:limited} we briefly explore the case of general collective measurements \cite{kolodynski2014, jarzyna2016thesis} that are implemented on $\mu = 10$ copies of a NOON state.
+
+We will also assume that in each repetition the parameters are encoded via the unitary transformation $U(\boldsymbol{\theta})=\mathrm{exp}(-i \boldsymbol{K}\cdot \boldsymbol{\theta})$, where $\boldsymbol{K} = (K_1, \dots, K_d)$ are commuting generators. Thus we can define the following quantum metrology protocol: 
+\begin{enumerate}
+\item A probe state $\rho_0$ is prepared.
+\item The interaction with an external system transforms the probe as $\rho_0 \rightarrow \rho(\boldsymbol{\theta}) = U(\boldsymbol{\theta})\rho_0 U^\dagger(\boldsymbol{\theta})$,
+\item A measurement scheme with elements $\lbrace E(m_i)\rbrace$ is performed to extract the information about $\boldsymbol{\theta}$.
+\item The process is repeated $\mu$ times, which generates the data $\boldsymbol{m}=(m_1, \dots, m_\mu)$.
+\end{enumerate}
+
+To make the protocol more realistic, we typically define some notion of resources that allows us to capture further constraints that different applications may impose in practice. To this end, Proctor \emph{et al.} introduced in \cite{proctor2017networked} the resource operator $R$, which is Hermitian, and defined the average amount of resources for a single shot as $\langle R \rangle = \mathrm{Tr}(\rho_0 R)$. In addition, they imposed that $\comm*{R}{U(\boldsymbol{\theta})} = 0$, since this implies that $\mathrm{Tr}[\rho(\boldsymbol{\theta}) R] = \mathrm{Tr}(\rho_0 R) = \langle R \rangle$. In words, the resources are conserved during the interaction between the probe and the external system, a condition that guarantees that the resource counting will not depend on the unknown parameters. 
+
+Following this approach, we have that the total amount of resources consumed on average by the protocol described above is $\mu \langle R \rangle$. In turn, we can now formally define the regime of limited data as the regime where $\mu$ is low. In principle we could consider any realistic value for $\langle R \rangle$ without leaving this regime. However, the nature and scope of our study imposes two constraints on $\langle R \rangle$. On the one hand, one of our main goals is to identify the novel effects that emerge directly from having different amounts of data, and, as such, we have chosen $\langle R \rangle$ to be sufficiently low to guarantee that $\mu$ is the dominant contribution to the total resources. Importantly, this condition means that our results are particularly useful for the study of fragile systems \cite{eckert2007, pototschnig2011, carlton2010, taylor2013, taylor2015, taylor2016, PaulProctor2016}. On the other hand, $\langle R \rangle$ needs to be large enough to allow for certain quantum enhancements to be relevant, which in the majority of our schemes can be achieved simply by requiring that $\langle R \rangle > 1$\footnote{An illustrative example to justify this choice is the case of a Mach-Zehnder interferometer with a single photon, since in that scenario we have that the sensitivity of coherent and NOON states is the same, in spite of the fact that the coherent state is classical-like (see section \ref{subsec:commoninter}).}. Crucially, this configuration will allow us to explore the interplay between a small amount of data and the usefulness of exploiting quantum features such as squeezing and sensor entanglement. 
+
+\section{Uncertainty and estimation}
+\label{sec:uncertainty}
+
+Once the outcomes ${\boldsymbol{m}}=(m_1, \dots, m_\mu)$ have been generated with the protocol that we have described, the next step is to develop a technique to extract information from them. We already saw a first approximation of the type of procedure that is suitable for this task when we revisited the Mach-Zehnder interferometer in section \ref{sec:qmetrology}, where we were able to identify two key elements: a way of making estimates that inform us about the true values of the parameters, and a second type of quantity that represents the quality of this process. The former are formally encoded in a vector estimator $\boldsymbol{g}(\boldsymbol{m}) = ( g_1(\boldsymbol{m}), \dots, g_d (\boldsymbol{m}))$, which is a function of the experimental outcomes, while the latter is a measure of uncertainty. We then seek the estimators and the quantum protocol for which the uncertainty is minimal, and this search can be rephrased as an optimisation problem \cite{jaynes2003}.
+
+To construct the measure of uncertainty, first we introduce the error or deviation function $\mathcal{D} [\boldsymbol{g}({\boldsymbol{m}}),\boldsymbol{\theta}]$, which quantifies the deviation of our estimates $\boldsymbol{g}(\boldsymbol{m})$ when the parameters happened to be $\boldsymbol{\theta}$. Its choice relies on the nature of the variables that we wish to estimate. In our case, these will be either optical phases, differences of optical phases or simply periodic parameters; consequently, the deviation function should respect their periodic character \cite{helstrom1976, holevo2011, berry2015, kolodynski2014}. 
+
+One of the simplest options that satisfy this requirement for a single parameter is the sine error \cite{demkowicz2011, kolodynski2014, rafal2015}
+\begin{equation}
+\mathcal{D} [g({\boldsymbol{m}}),\theta] = 4~\mathrm{sin}^2\left\lbrace\left[g(\boldsymbol{m})-\theta\right]/2\right\rbrace.
+\label{sinerror}
+\end{equation}
+In principle we could base our analysis of single-parameter schemes on equation (\ref{sinerror}), since Demkowicz-Dobrza\ifmmode \acute{n}\else \'{n}\fi{}ski found in \cite{demkowicz2011} a completely analytical solution to the problem of phase estimation for $\mu = 1$ using this type of error. However, the extension of this result to the case where many repetitions are considered is still numerically challenging. Instead, here we argue that the characteristics of the regime of limited data motivate an important simplification. 
+
+If the empirical data is limited, then the prior information about the unknown parameters included in $I_0$ will generally play an active role in their estimation. Therefore, a natural regime to study situations where the number of measurements is small is the regime of moderate prior knowledge. This is an intermediate case between complete ignorance and an amount of prior knowledge so high that the problem can be recast in a local form \cite{durkin2007, demkowicz2011}. Then we may say that, in a certain sense, the quantity $\abs{g(\boldsymbol{m})-\theta}/2$ will be moderately small, so that it is meaningful to approximate equation (\ref{sinerror}) as 
+\begin{equation}
+\mathcal{D} [g({\boldsymbol{m}}),\theta] \approx \left[g(\boldsymbol{m}) - \theta\right]^2.
+\label{squarerror}
+\end{equation}
+In appendix \ref{prior_sinapprox_appendix} we evaluate the error in the truncation of the Taylor expansion that leads to equation (\ref{squarerror}) in different ways, and we show that the main conclusions of our results for single-parameter protocols, which operate in the regime of moderate prior knowledge, are not affected by it. Therefore, we can safely exploit the mathematical simplicity of the square error in the context of phase estimation. 
+
+Furthermore, given the relative freedom to choose deviation functions, we can apply the same logic to multi-parameter problems, and we can require that any reasonable error that we may use for several periodic parameters also approaches its squared version in the intermediate regime of prior information. That is, 
+\begin{equation}
+\mathcal{D} [\boldsymbol{g}({\boldsymbol{m}}),\boldsymbol{\theta}, \mathcal{W}] \approx  \mathrm{Tr}\left\lbrace \mathcal{W} \left[\boldsymbol{g}(\boldsymbol{m}) - \boldsymbol{\theta}\right] \left[\boldsymbol{g}(\boldsymbol{m}) - \boldsymbol{\theta}\right]^\transpose  \right\rbrace,
+\label{multideviation}
+\end{equation}
+where $\mathcal{W} = \mathrm{diag}(w_1, \dots, w_d)$, $\mathrm{Tr}(\mathcal{W}) = 1$ and $w_i \geqslant 0$ indicates the relative importance of estimating the $i$-th parameter \cite{proctor2017networked}. In that way, the optimal strategy will produce the smallest errors for the most relevant parameters.
+
+Using the chosen $\mathcal{D} [\boldsymbol{g}({\boldsymbol{m}}),\boldsymbol{\theta}, \mathcal{W}]$ as a basis, it is possible to construct different types of uncertainty depending on which information is assumed to be exactly known and which information is only partial \cite{jaynes2003}. As a result, different authors often base their analysis of metrology protocols on different quantities \cite{rafal2015, li2018}. 
+
+To simplify this state of affairs, here we propose a progressive construction of different measures of uncertainty, using as a guide the physical requirements imposed by the three basic situations that we could face in an scenario with unknown parameters: a real experiment that is performed in the laboratory, the simulation of a hypothetical experiment, and the theoretical study of a real or hypothetical experiment. Moreover, we show that this method gives a clear physical meaning to the figure of merit that is suitable to design protocols from theory. While the calculations in this thesis will be based on the square errors in equations (\ref{squarerror}) and (\ref{multideviation}), we draw attention to the fact that the following discussion is also applicable to more general deviation functions. For a discussion about the relation of our strategy with other approaches in the literature, see appendix \ref{sec:otheruncertainty}. 
+
+Let us first recall that the raison d'\^{e}tre of any experiment is to produce outcomes. Since in the first scenario these are known, the measure of uncertainty employed by an experimentalist will depend on $\boldsymbol{m}$. On the contrary, it is clear that it should not depend on $\boldsymbol{\theta}$ because the parameters are what we seek. Therefore, we need a probability function with information about the parameters for a given set of outcomes, which is precisely what the posterior $p(\boldsymbol{\theta}|\boldsymbol{m})$ provides, and the error of the estimation is
+\begin{equation}
+\epsilon(\boldsymbol{m}) = \int d\boldsymbol{\theta} ~p(\boldsymbol{\theta}|\boldsymbol{m}) ~\mathcal{D}[\boldsymbol{g}(\boldsymbol{m}),\boldsymbol{\theta}, \mathcal{W}].
+\label{errexp}
+\end{equation}
+This is the uncertainty that arises from gathering and processing data in a real experiment, both in quantum \cite{PaulProctor2016} and classical \cite{jaynes2003} scenarios\footnote{Technically, if we use the square error in the laboratory then we need to calculate the square root of equation (\ref{errexp}), so that both the estimates and the uncertainty have the same units. However, the present form is more convenient for studies of a theoretical nature.}. As we saw in the previous chapter, the posterior probability is the result of applying Bayes theorem (see equation \ref{bayestheorem1}), and it can be calculated as $p(\boldsymbol{\theta}|\boldsymbol{m}) \propto p(\boldsymbol{\theta}) p(\boldsymbol{m}|\boldsymbol{\theta})$. Importantly, in quantum metrology we can assume that the likelihood models are a good representation of reality because, so far, the quantum framework has passed all experimental tests. In addition, the prior knowledge stored in $p(\boldsymbol{\theta})$ will typically include the multivariate domain in which we can expect to find the parameters, a piece of information that can be given, for instance, by the results of past experiments. 
+
+Apart from analysing a specific experiment, usually we also want to enhance its design in order to improve the precision of the estimation protocol. This study will often occur outside of the laboratory, in which case we no longer have access to specific measurement outcomes. In turn, a measure of uncertainty that is useful for designing experiments cannot depend on $\boldsymbol{m}$. Since equation (\ref{errexp}) already gives us the experimental error, now we need a probability function with information about the possible experimental outcomes that the configuration under analysis could produce. One possibility is to employ $p(\boldsymbol{m}|\boldsymbol{\theta}')$, where $\boldsymbol{\theta}'$ is our simulation of the true values, and calculate the average of the errors for all the possible experimental outcomes associated with $\boldsymbol{\theta}'$ weighted by their likelihood, i.e.,
+\begin{equation}
+\epsilon(\boldsymbol{\theta}') = \int d\boldsymbol{m}~p(\boldsymbol{m}|\boldsymbol{\theta}')~\epsilon(\boldsymbol{m}).
+\label{errsim}
+\end{equation}
+This is the appropriate quantity if our aim is to simulate experiments and study their performance on average, as it is the case, for example, in \cite{PaulProctor2016}.
+
+The previous uncertainty still depends on the specific values $\boldsymbol{\theta}'$ of the simulation. If we instead follow a purely theoretical approach, then we need to take into account the fact that both outcomes and true values for the parameters are unknown to the theorist. In that case, the relevant information about the possible outcomes is $p(\boldsymbol{m}) = \int d\boldsymbol{\theta}' p(\boldsymbol{\theta}') p(\boldsymbol{m}|\boldsymbol{\theta}')$, and by taking either the average $\int d\boldsymbol{m} ~p(\boldsymbol{m})\epsilon(\boldsymbol{m}) = \bar{\epsilon}$ weighted over $p(\boldsymbol{m})$, or the average $\int d\boldsymbol{\theta}' p(\boldsymbol{\theta}')\epsilon(\boldsymbol{\theta}') = \bar{\epsilon}$ weighted over our prior knowledge of $\boldsymbol{\theta}'$, and using that $p(\boldsymbol{m}) p(\boldsymbol{\theta}|\boldsymbol{m}) = p(\boldsymbol{\theta}, \boldsymbol{m})$, we finally obtain the error
+\begin{equation}
+\bar{\epsilon} = \int d\boldsymbol{\theta} d\boldsymbol{m} ~p(\boldsymbol{\theta}, \boldsymbol{m}) ~\mathcal{D}[\boldsymbol{g}(\boldsymbol{m}),\boldsymbol{\theta}, \mathcal{W}],
+\label{errthe}
+\end{equation}
+which is independent of the values of parameters and outcomes. Following the previous discussion, $\bar{\epsilon}$ represents the uncertainty on average about the knowledge that we can acquire in principle with the experimental configuration that is being studied. As such, this is the suitable figure of merit to design experiments from theory in order to make optimal inferences, and we will make use of it from now on. 
+
+\section{Quantum estimation and metrology}
+\label{sec:qestimation}
+
+\subsection{The fundamental equations of the optimal strategy}
+\label{subsec:fundeq}
+
+Using the joint probability for quantum systems in equation (\ref{basicinfo}) and the error in equation (\ref{errthe}), we have that the uncertainty is
+\begin{equation}
+\bar{\epsilon} = \int d\boldsymbol{\theta} d\boldsymbol{m} ~p(\boldsymbol{\theta})\mathrm{Tr}\left[E(\boldsymbol{m})\varrho(\boldsymbol{\theta})\right]\mathcal{D}[\boldsymbol{g}(\boldsymbol{m}),\boldsymbol{\theta}, \mathcal{W}].
+\label{qerrgen}
+\end{equation}
+Assuming that the prior has been assigned, let us first consider a case where both $\varrho_0$ and the details of its transformation $\varrho_0 \rightarrow \varrho(\boldsymbol{\theta})$ are known. Then, the optimisation of the protocol is achieved by minimising equation (\ref{qerrgen}) with respect to the vector estimator $\boldsymbol{g}(\boldsymbol{m})$ and the measurement scheme $E(\boldsymbol{m})$. 
+
+To simplify the problem we can combine $\boldsymbol{g}(\boldsymbol{m})$ and $E(\boldsymbol{m})$ into a single object by labelling the POM elements with the estimates as $E(\boldsymbol{g}) = \int d\boldsymbol{m}~\delta\left(\boldsymbol{g}(\boldsymbol{m})-\boldsymbol{g}\right) E(\boldsymbol{m})$ \cite{rafal2015}. As a result, equation (\ref{qerrgen}) can be recast in the form
+\begin{equation}
+\bar{\epsilon} = \int d\boldsymbol{\theta} d\boldsymbol{g} ~p(\boldsymbol{\theta})\mathrm{Tr}\left[E(\boldsymbol{g})\varrho(\boldsymbol{\theta})\right]\mathcal{D}(\boldsymbol{g},\boldsymbol{\theta}, \mathcal{W}).
+\label{errhelstrom} 
+\end{equation} 
+How equation (\ref{errhelstrom}) is to be optimised has been known since the works of Helstrom \cite{helstrom1976, helstrom1974} and Holevo \cite{holevo1973b, holevo1973}. Following their expositions in \cite{helstrom1976} and \cite{holevo1973b}, respectively, first we rewrite equation (\ref{errhelstrom}) as $\bar{\epsilon} = \int  d\boldsymbol{g} ~\mathrm{Tr}\left[E(\boldsymbol{g})Q(\boldsymbol{g})\right]$, with $Q(\boldsymbol{g}) = \int d\boldsymbol{\theta}  ~p(\boldsymbol{\theta})\varrho(\boldsymbol{\theta})\mathcal{D}(\boldsymbol{g},\boldsymbol{\theta}, \mathcal{W})$. If $E_\mathrm{opt}(\boldsymbol{g})$ is the optimal strategy, then there exists a Hermitian operator $Y$ satisfying that 
+\begin{equation}
+\begin{cases}
+Y = \int d\boldsymbol{g} ~Q(\boldsymbol{g}) E_\mathrm{opt}(\boldsymbol{g}) = \int d\boldsymbol{g} E_\mathrm{opt}(\boldsymbol{g}) Q(\boldsymbol{g}), \\
+Q(\boldsymbol{g}) - Y \geqslant 0,
+\end{cases}
+\label{optequations}
+\end{equation}
+and we have that $\bar{\epsilon} \geqslant \bar{\epsilon}_{\mathrm{min}} = \mathrm{Tr}(Y)$.
+
+The operator inequality is to be understood as $\langle u| Q(\boldsymbol{g}) |u \rangle \geqslant \langle u| Y |u \rangle $ for any $\ket{u}$. In addition, the conditions in equation (\ref{optequations}), together with the closure relation $\int d\boldsymbol{g} E_\mathrm{opt}(\boldsymbol{g}) = \mathbb{I}$, imply that 
+\begin{equation}
+\left[Q(\boldsymbol{g}) - Y \right]E_\mathrm{opt}(\boldsymbol{g})d\boldsymbol{g} = 0.
+\label{practicalcondition}
+\end{equation}
+Therefore, if we can find the Hermitian operator $Y$ that satisfies the previous inequality and gives us the minimum value for $\mathrm{Tr}(Y)$, then we may use equation (\ref{practicalcondition}) to construct the optimal strategy\footnote{When the operators are represented by matrices we can find the estimates by imposing that the determinant of $\left[Q(\boldsymbol{g}) - Y \right]$ vanishes, and construct the optimal POM elements from its null space. We recall that $\ket{v}$ belongs to the null space of $A$ when $A \ket{v} = 0 $ \cite{mathematics2004}.}. When this is not possible, the conditions in equation (\ref{optequations}) offer at least a way to verify whether a given measurement is optimal. Helstrom applied the latter approach to several examples in \cite{helstrom1976}. 
+
+A second possibility is to assume that the POM is known and minimise equation (\ref{errhelstrom}) with respect to the initial probe state $\varrho_0$. Macieszczak \emph{et al.} studied this problem in \cite{macieszczak2014bayesian} for a single parameter and the square error, and proposed an heuristic algorithm to find the state and measurement scheme that are simultaneously optimal\footnote{We may think of the optimisation of the measurement scheme as the goal of quantum metrology, and of the full optimisation as the aim of quantum estimation theory.}. We now adapt their arguments to the general case of this section. 
+
+If we express the parameter encoding as $\varrho(\boldsymbol{\theta})=\Lambda_{\boldsymbol{\theta}} (\varrho_0)$, then we can define a dual map $\Lambda_{\boldsymbol{\theta}}^{*}$ for which $\mathrm{Tr}\left[B \Lambda_{\boldsymbol{\theta}}(C) \right] = \mathrm{Tr}\left[\Lambda_{\boldsymbol{\theta}}^{*}(B) C \right]$ \cite{macieszczak2014bayesian}. As a consequence, equation (\ref{errhelstrom}) is equivalent to
+\begin{equation}
+\bar{\epsilon} = \mathrm{Tr}\left\lbrace \varrho_0 \int d\boldsymbol{\theta} ~p(\boldsymbol{\theta})  \Lambda_{\boldsymbol{\theta}}^{*}\left[ \int d\boldsymbol{g}~E(\boldsymbol{g})\mathcal{D}(\boldsymbol{g},\boldsymbol{\theta}, \mathcal{W}) \right] \right\rbrace \equiv \mathrm{Tr}\left(\varrho_0 \Gamma \right),
+\label{errmacieszczak} 
+\end{equation}
+and the optimal probe is a pure state given by the eigenvector of $\Gamma$ with the minimum eigenvalue \cite{macieszczak2014bayesian}. In addition, we can constrain the minimisation with further conditions such as a fixed amount of resources $\langle R \rangle$ \cite{ariano1998}. Then, by combining this procedure with Helstrom and Holevo's approach we may be able to construct the general optimal solution. In particular, we can calculate the optimal measurement $E^{\text{\tiny{(0)}}}_{\boldsymbol{g}}$ for an initial seed $\varrho_0^{\text{\tiny{(0)}}}$, introduce this POM in equation (\ref{errmacieszczak}) to find its optimal state $\varrho_0^{\text{\tiny{(1)}}}$, and repeat the process until the solutions converge \cite{macieszczak2014bayesian}.
+
+The work of Macieszczak \emph{et al.} \cite{macieszczak2014bayesian} demonstrates that the previous strategy succeeds at least for the square error. This is a crucial result, since the framework in this section can provide general solutions to a wide range of estimation problems. Unfortunately, these results present two important difficulties. One of them is that, except for a few cases such as those that admit covariant measurements \cite{ariano1998, chiara2003, chiribella2005, holevo2011, rafal2015}, deriving exact solutions from this formalism is known to be challenging \cite{helstrom1976}, and this makes it difficult to exploit it in many practical scenarios. 
+
+As for the second difficulty, the fundamental equations can predict optimal strategies that do not represent the repetitions of an experiment, which is the physical model that we have assumed in our definition for the regime of limited data. We can see why this is the case by noticing that, according to equation (\ref{optequations}), the optimal POM for our initial state $\varrho_0 = \rho_0 \otimes \rho_0 \otimes \cdots$ with $\mu$ copies of $\rho_0$ can be collective \cite{jarzyna2016thesis}, and this would contradict our requirement of independent measurements in equation (\ref{iidpom})\footnote{Remarkably, in section \ref{measurements_section} we demonstrate that a collective POM is not better than independent measurements for NOON states in a Mach-Zehnder interferometer.}. Similarly, the optimal state that arises from equation (\ref{errmacieszczak}) for independent and identical measurements might entangle different copies of the probe. 
+
+Given these difficulties, an alternative path that is commonly followed in quantum metrology is to bound the estimation error \cite{rafal2015, li2018, tsang2012, tsang2016, liu2016}. The key advantage of this method is that it sometimes produces tight bounds, and in many situations this is sufficient to extract useful information about the fundamental precision that a given scheme could achieve \cite{rafal2015, Szczykulska2016, haase2018jul}, which in turn provides a mathematically simpler way of finding optimal solutions without relying on the exact theory. This is a common feature, for instance, of the asymptotic regime of many repetitions \cite{rafal2015, jarzyna2015true, haase2018jul}. Note, however, that in general the latter is only appropriate for applications with an abundance of measurement data, which is precisely the requirement that we wish to weaken in this thesis, while those bounds that can be applied with a low number of trials contain less information about fundamental limits because they tend to be loose in such regime \cite{tsang2012, tsang2016}.
+
+The fact that the reliance on bounds is a type of approximation that will generally introduce limitations on the applicability of the results cannot be overstated. Indeed, the misapplication of bounds can often lead to paradoxes \cite{li2018}. An important example of these that we will revisit in later sections is that of the states that appear to provide an infinite precision \cite{rivas2012, zhang2013}, even when in practice they do not and are, in fact, inefficient \cite{tsang2012, giovannetti2012subheisenberg, berry2012infinite, pezze2013, rafal2015} (although not completely useless \cite{alfredo2017}). The key observation is that such paradoxes appear when the assumptions that go into the construction of such bounds are not appropriately taken into account, and in principle there is no reason to think that there is a problem with the physical scheme itself unless the paradox also arises in the exact theory. 
+
+This state of affairs best highlights the importance of developing a non-asymptotic methodology and its potential usefulness in applications: we seek a formulation able to provide more information about the regime of limited data than what current techniques can do, and yet make it tractable enough to be useful in real-world applications. To achieve this, we will perform two preliminary analyses. Firstly, we will examine which elements of the strategy based on bounds can be exploited for our purposes. Secondly, we will explore how Helstrom and Holevo's approach can be adapted to study repetitions. The foundation of our methodology will emerge from the practical combination of both, and while our solutions will not be as general as what the exact theory could offer, we will show that they give us access to a regime largely unexplored and required for further practical progress in the field of quantum metrology and sensing. 
+
+\subsection{Cram\'{e}r-Rao bounds}
+\label{subsec:crb}
+
+Let us make our choice of deviation function in section (\ref{sec:uncertainty}) explicit, such that the uncertainty of the estimation is approximately given by the mean square error
+\begin{equation}
+\bar{\epsilon} \approx \bar{\epsilon}_{\mathrm{mse}} = \int d\boldsymbol{\theta} d\boldsymbol{m} ~p(\boldsymbol{\theta}, \boldsymbol{m})~\mathrm{Tr}\left\lbrace \mathcal{W} \left[\boldsymbol{g}(\boldsymbol{m}) - \boldsymbol{\theta}\right] \left[\boldsymbol{g}(\boldsymbol{m}) - \boldsymbol{\theta}\right]^\transpose \right\rbrace.
+\label{msethesis}
+\end{equation}
+In addition, we notice that, according to the condition in equation (\ref{iidlikelihood}) for independent and identical experiments, $p(\boldsymbol{\theta}, \boldsymbol{m}) = p(\boldsymbol{\theta})\prod_{i=1}^\mu p(m_i|\boldsymbol{\theta})$.
+
+A widely used method to compare estimation schemes consists in optimising equation (\ref{msethesis}) by approaching the Cram\'{e}r-Rao bound \cite{rafal2015, kay1993, paris2009}. If we rewrite the mean square error as
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} = \int d\boldsymbol{\theta} ~p(\boldsymbol{\theta}) ~\mathrm{Tr}\left\lbrace \mathcal{W}\left[C(\boldsymbol{\theta}) + \boldsymbol{b}(\boldsymbol{\theta})\boldsymbol{b}(\boldsymbol{\theta})^\transpose \right] \right\rbrace,
+\label{msedecomposition}
+\end{equation}
+where we have introduced the covariance matrix of the vector estimator
+\begin{align}
+C(\boldsymbol{\theta}) = &\int d\boldsymbol{m}~p(\boldsymbol{m}|\boldsymbol{\theta})\boldsymbol{g}(\boldsymbol{m})\boldsymbol{g}(\boldsymbol{m})^\transpose 
+\nonumber \\
+& - \int d\boldsymbol{m}~p(\boldsymbol{m}|\boldsymbol{\theta})\boldsymbol{g}(\boldsymbol{m})\int d\boldsymbol{m}~p(\boldsymbol{m}|\boldsymbol{\theta})\boldsymbol{g}(\boldsymbol{m})^\transpose 
+\end{align}
+and its vector bias $\boldsymbol{b}(\boldsymbol{\theta}) = \int d\boldsymbol{m}~ p(\boldsymbol{m}|\boldsymbol{\theta}) \left[ \boldsymbol{g}(\boldsymbol{m}) - \boldsymbol{\theta}\right]$, then the classical version of the Cram\'{e}r-Rao bound is \cite{kay1993, jaynes2003, bayesbounds2007}
+\begin{align}
+\bar{\epsilon}_{\mathrm{mse}} \geqslant  &\int d\boldsymbol{\theta}~p(\boldsymbol{\theta})~\mathrm{Tr}\left( \mathcal{W}\left\lbrace\left[\mathbb{I} + \frac{\partial \boldsymbol{b}(\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} \right] \frac{F(\boldsymbol{\theta})^{-1}}{\mu} \left[\mathbb{I} + \frac{\partial \boldsymbol{b}(\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} \right]^\transpose \right\rbrace \right)
+\nonumber \\
+& + \int d\boldsymbol{\theta}~p(\boldsymbol{\theta})~\mathrm{Tr}\left[ \mathcal{W} \boldsymbol{b}(\boldsymbol{\theta})\boldsymbol{b}(\boldsymbol{\theta})^\transpose \right],
+\label{ccrb}
+\end{align}
+which is given in terms of the Fisher information matrix\footnote{Notice that the multidimensional integral in equation (\ref{fim}) is equivalent to $\mu$ times the integral over a single observation $m$ because we are assuming independent and identical trials.}
+\begin{align}
+F(\boldsymbol{\theta}) &= \frac{1}{\mu}\int \frac{d\boldsymbol{m}}{p(\boldsymbol{m}|\boldsymbol{\theta})} \left[\frac{\partial p(\boldsymbol{m}|\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} \right] \left[\frac{\partial p(\boldsymbol{m}|\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} \right]^\transpose
+\nonumber \\
+&= \int \frac{dm}{p(m|\boldsymbol{\theta})} \left[\frac{\partial p(m|\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} \right] \left[\frac{\partial p(m|\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} \right]^\transpose.
+\label{fim}
+\end{align}
+
+A bound is particularly useful when it can be saturated. In our case, the necessary and sufficient condition for the saturation of the previous inequality is \cite{kay1993, jaynes2003}
+\begin{equation}
+\left[ \boldsymbol{g}(\boldsymbol{m}) - \boldsymbol{\theta} \right] =  \left[\mathbb{I} + \frac{\partial \boldsymbol{b}(\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} \right] \frac{F(\boldsymbol{\theta})^{-1}}{p(\boldsymbol{m}|\boldsymbol{\theta})\mu}  \frac{\partial p(\boldsymbol{m}|\boldsymbol{\theta})}{\partial \boldsymbol{\theta}} + \boldsymbol{b}(\boldsymbol{\theta}).
+\label{crbcondition}
+\end{equation}
+For a given vector estimator and likelihood function, we can always use equation (\ref{crbcondition}) to verify whether our scheme achieves the bound. However, ideally we would like to exploit the result in equation (\ref{ccrb}) to find optimal strategies in a more general fashion. This can be done in two steps. 
+
+The first step is to employ the so-called maximum likelihood estimator, which is defined as $\boldsymbol{g}(\boldsymbol{m}) = \mathrm{max}_{\boldsymbol{\theta}}\left[ p(\boldsymbol{m}| \boldsymbol{\theta}) \right]$ \cite{rafal2015, kay1993}. The key advantage of this tool lies on its asymptotic properties in the limit $\mu \rightarrow \infty$. In particular, the maximum likelihood is asymptotically unbiased \cite{rafal2015, kay1993}, i.e., $\boldsymbol{b}(\boldsymbol{\theta}) \rightarrow \boldsymbol{0}$ as $\mu$ grows, and it satisfies the saturation condition in equation (\ref{crbcondition}) in such limit, which implies that it is also asymptotically optimal \cite{kay1993, vaart1998}. Thus, we can always approach the Cram\'{e}r-Rao bound in the regime of many repetitions $\mu \gg 1$, where it becomes
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} \approx \frac{1}{\mu}\int d\boldsymbol{\theta}~p(\boldsymbol{\theta}) ~\mathrm{Tr}\left[\mathcal{W} F(\boldsymbol{\theta})^{-1}\right].
+\label{ccrbmulti}
+\end{equation} 
+If we further assume that the Fisher information does not depend on the parameters, so that $F(\boldsymbol{\theta})=F$ for all $\boldsymbol{\theta}$, then we conclude that $\bar{\epsilon}_{\mathrm{mse}} \approx \mathrm{Tr}(\mathcal{W} F^{-1})/\mu$.
+
+The true usefulness of this method is revealed when we further consider the quantum aspect of the problem, which is the second step. According to equation (\ref{fim}), the Fisher information matrix only depends on the likelihood function, which is constructed out of the measurement scheme and the transformed state. In the single-parameter case, this matrix is reduced to the scalar
+\begin{equation}
+F(\theta) = \int \frac{dm}{p(m|\theta)}\left[\frac{\partial p(m|\theta)}{\partial \theta}\right]^2,
+\label{fishersingleparameter}
+\end{equation} 
+and by maximizing it over all the POMs, Braunstein and Caves \cite{BraunsteinCaves1994} proved the inequality $F(\theta) \leqslant F_q(\theta) = \mathrm{Tr}\left[ \rho(\theta) L(\theta) \right]$, where $F_q(\theta)$ is the quantum Fisher information originally introduced by Helstrom in \cite{helstrom1967mmse}. The symmetric logarithmic derivative $L(\theta)$ is obtained by solving $L(\theta)\rho(\theta) + \rho(\theta)L(\theta) = 2 \partial \rho(\theta)/\partial \theta$, and the bound on the Fisher information may be saturated with a measurement scheme based on the projections onto the eigenstates of $L(\theta)$ \cite{BraunsteinCaves1994, genoni2008}. Moreover, $F_q$ does not depend on $\theta$ when the transformation is a unitary that takes the form $U(\theta)=\mathrm{exp}(-i K \theta)$ \cite{pezze2014, rafal2015}. Therefore, $\bar{\epsilon}_{\mathrm{mse}} \approx \bar{\epsilon}_{cr} = 1/\left(\mu F_q\right)$ given a POM for which $F(\theta) = F_q$, which is a quantum version of the scalar Cram\'{e}r-Rao bound.  
+
+From this we conclude that the asymptotically optimal precision for a single parameter is a function of $\rho(\theta)$ alone, and that to find optimal probes in this regime we just need to maximize the quantum Fisher information. Since we also know an estimator and a POM that can achieve this precision, we have completed our search of the optimal strategy for many trials. Furthermore, an alternative and simpler procedure that is very useful in practice is to consider a collection of relevant probe states and compare their performances using $1/\left(\mu F_q\right)$, a quantity that is independent of both the estimator and the measurement scheme.
+
+To extend this idea to the multi-parameter case, we may construct a quantum version of the Fisher information matrix with components \cite{helstrom1967mmse, helstrom1976, Szczykulska2016, sammy2016compatibility, proctor2017networked}
+\begin{equation}
+\left[F_q(\boldsymbol{\theta})\right]_{ij} = \frac{1}{2}\mathrm{Tr}\left\lbrace \rho(\boldsymbol{\theta}) \left[L_i(\boldsymbol{\theta}) L_j(\boldsymbol{\theta}) + L_j(\boldsymbol{\theta}) L_i(\boldsymbol{\theta}) \right] \right\rbrace,
+\label{qfimgen}
+\end{equation} 
+where $L_i(\boldsymbol{\theta})$ is the symmetric logarithm derivative of the $i$-th parameter. Assuming that the state is pure, it can be shown that there is an individual measurement on a single copy of the system for which $F(\boldsymbol{\theta}) = F_q(\boldsymbol{\theta})$ if and only if \cite{sammy2016compatibility, pezze2017simultaneous}
+\begin{equation}
+\langle \psi(\boldsymbol{\theta})|[L_i(\boldsymbol{\theta}), L_j(\boldsymbol{\theta})]|\psi(\boldsymbol{\theta})\rangle = 0,
+\label{weakcommutation}
+\end{equation}
+for all $i$, $j$. Moreover, if the parameters are encoded with the unitary $U(\boldsymbol{\theta}) = \mathrm{exp}(-i \boldsymbol{K}\cdot \boldsymbol{\theta})$, then the weak commutation condition in equation (\ref{weakcommutation}) is satisfied when $[K_i, K_j] = 0$, for all $i$, $j$ \cite{sammy2016compatibility, pezze2017simultaneous}, and the components of such matrix are
+\begin{equation}
+(F_q)_{ij} =  4\left( \langle  \psi_0 | K_i K_j |  \psi_0 \rangle - \langle  \psi_0 | K_i |  \psi_0 \rangle \langle  \psi_0 | K_j |  \psi_0 \rangle \right),
+\label{fimpur}
+\end{equation}
+so that the optimal asymptotic error is $\bar{\epsilon}_{cr} = \mathrm{Tr}(\mathcal{W} F_q^{-1})/\mu$ when $F(\boldsymbol{\theta})=F_q$. Importantly, this is again a function of $\rho(\boldsymbol{\theta})$ alone. It is interesting to note that from equation (\ref{fimpur}) we recover a notion of sensitivity similar to what we found via the error propagation formula in section \ref{subsec:optint}, since for a single parameter it becomes $F_q = 4 \left(\langle \psi_0 | K^2 |\psi_0 \rangle -  \langle \psi_0 | K |\psi_0 \rangle^2\right)$ and, in that case, $\bar{\epsilon}_{cr} = 1/(4\mu  \Delta K^2)$\footnote{Nevertheless, in section \ref{subsec:optint} we used the quantity $1/(4\Delta K^2)$ as an approximation to the experimental error that was measured in the laboratory after many trials, while in this context it plays the role of a quantity that gives information about the precision for each shot in the regime of many of them.}. 
+
+The restrictive conditions required to exploit the multi-parameter result contrast with the generality of the scalar case. Fortunately, all the multi-parameter schemes in this thesis are based on pure states and commuting generators, and as such the condition in equation (\ref{weakcommutation}) is satisfied. In those cases where this is not true, one can still study bounds based on the right logarithmic derivatives that arise from $\rho(\boldsymbol{\theta})R_i(\boldsymbol{\theta}) = \partial \rho(\boldsymbol{\theta})/\partial \theta_i$, which can be tighter than the bounds based on equation (\ref{qfimgen}) \cite{Szczykulska2016, helstrom1976}, or rely on the Holevo Cram\'{e}r-Rao bound \cite{holevo2011, sammy2016compatibility, albarelli2019}. The latter is a more general result and can be asymptotically approached if we allow for collective measurements within the framework of quantum local asymptotic normality \cite{sammy2016compatibility, gill2011}. However, note that as in the case of Helstrom and Holevo's Bayesian approach, these collective measurements would no longer represent repetitions of an experiment, which is the practical case that we wish to investigate. 
+
+It is also important to observe that the classical Cram\'{e}r-Rao bound in equation (\ref{ccrbmulti}) that acts as the basis of the previous method can be also obtained without taking the limit $\mu \rightarrow \infty$ if we assume unbiased or locally unbiased estimators\footnote{An estimator is unbiased if $\boldsymbol{b}(\boldsymbol{\theta}) = \boldsymbol{0}$ for all $\boldsymbol{\theta}$, while it is locally unbiased at $\boldsymbol{\theta}_0$ if $\boldsymbol{b}(\boldsymbol{\theta}_0) = \boldsymbol{0}$ and $\int d\boldsymbol{m} ~ g_i(\boldsymbol{m})~ \partial p(\boldsymbol{m}|\boldsymbol{\theta}_0)/\partial \theta_j = \delta_{ij}$ \cite{fraser1964}.} \cite{kay1993, rafal2015, kolodynski2014, hall2012}. Nevertheless, here we are interested in considering a more general set of scenarios where these restrictions do not necessarily apply, and this generality means that in most cases we can only approach the Cram\'{e}r-Rao bound asymptotically.
+
+From this discussion we can readily extract an important conclusion that will prove to be useful for our methodology. Since the quantum Cram\'{e}r-Rao error can be approached asymptotically when the appropriate conditions are fulfilled, the bounds derived with this tool are fundamental in the regime of many trials. As a consequence, we may see the Bayesian uncertainty in equation (\ref{msethesis}) as the true underlying theory (for a moderate amount of prior knowledge) that can give us the optimum in general and the Cram\'{e}r-Rao bound as an approximation to it that works and is recovered in certain situations. While the formal framework to exploit this idea in a consistent way is given by the theory of local asymptotic normality \cite{lecam1986, vaart1998, gill2011}, for our purposes it suffices to follow some known heuristic arguments that will be revisited in chapters \ref{chap:nonasymptotic} and \ref{chap:networks}, and to combine them with the numerical simulations of practical schemes that constitute a part of our results. 
+
+\subsection{Other quantum bounds}
+\label{subsec:alternativebounds}
+
+Although the Cram\'{e}r-Rao bound generates fundamental limits once we have collected enough data, there is no reason to expect that these results will be valid out of this regime, and this motivates the search of quantum bounds that are valid for all $\mu$. This idea was precisely explored by Tsang \cite{tsang2012} and Lu and Tsang \cite{tsang2016}, where the two families of Bayesian bounds \cite{bayesbounds2007} were extended to the quantum regime. 
+
+According to their results, the single-parameter quantum Ziv-Zakai bound for a flat prior of width $W_0$ is \cite{tsang2012}
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} \geqslant \frac{1}{2} \int_{0}^{W_0} d\theta \theta \left(1 - \frac{\theta}{W_0} \right) \left[1 - \sqrt{1 - \abs{f(\theta)}^{2\mu}} ~\right],
+\label{qzzb}
+\end{equation}
+where $f(\theta) = \bra{\psi_0}\ket{\psi(\theta)}$, $\ket{\psi_0}$ is a pure state and $\ket{\psi(\theta)}$ is the result of having encoded the parameter with a unitary transformation. Note that the parameter domain of the integral in equation (\ref{qzzb}) is always $[0, W_0]$, independently of where the uniform prior is centred. Equation (\ref{qzzb}) can be derived by reinterpreting the expression for the mean square error as a binary hypothesis problem \citep{bayesbounds2007, tsang2012}. 
+
+Furthermore, the quantum Weiss-Weinstein bound, which belongs to the second Bayesian family and is based on the covariance inequality\footnote{The covariance inequality is $\int d\boldsymbol{\theta}d\boldsymbol{m} ~ p(\boldsymbol{\theta}, \boldsymbol{m})~f(\boldsymbol{\theta}, \boldsymbol{m}) f(\boldsymbol{\theta}, \boldsymbol{m})^\transpose \geqslant \mathcal{T} \mathcal{G}^{-1} \mathcal{T}$, where $\mathcal{T} = \int d\boldsymbol{\theta}d\boldsymbol{m} ~ p(\boldsymbol{\theta}, \boldsymbol{m})~f(\boldsymbol{\theta}, \boldsymbol{m}) g(\boldsymbol{\theta}, \boldsymbol{m})^\transpose$ and $\mathcal{G} = \int d\boldsymbol{\theta}d\boldsymbol{m} ~ p(\boldsymbol{\theta}, \boldsymbol{m})~ g(\boldsymbol{\theta}, \boldsymbol{m}) g(\boldsymbol{\theta}, \boldsymbol{m})^\transpose$ \cite{bayesbounds2007}.}, establishes that \cite{tsang2016}
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} \geqslant \sup_{0 < s < 1} \frac{\theta^2 f_c(s,\theta)^2 \abs{f(\theta)}^{4\mu}}{h_c\left(s, \theta\right)\abs{f(\theta)}^{2\mu} - 2f_c(s,2\theta)\mathrm{Re}\left\lbrace \left[f(\theta)^{2} {f(2\theta)}^{*}\right ]^\mu \right\rbrace},
+\label{qwwb}
+\end{equation}
+where 
+\begin{equation}
+h_c\left(s, \theta\right) = f_c(2s,\theta) + f_c(2-2s,\theta),
+\end{equation}
+\begin{equation}
+f_c(s,\theta) = \int_{\lbrace \theta'\hspace{-0.1em},\hspace{0.2em} p(\theta')\neq 0 \rbrace} d\theta' p(\theta' + \theta)^s p(\theta')^{1-s}.
+\label{qwwbpriorterm}
+\end{equation} 
+
+Interestingly, these tools share the simplicity of the Cram\'{e}r-Rao bound to some extent, since the quantities in equations (\ref{qzzb} - \ref{qwwbpriorterm}) do not depend on either the estimator or the POM. Thanks to this we can derive lower bounds for a given transformed state $\rho(\theta)$ and any desired number of copies. Moreover, while the Cram\'{e}r-Rao bound is a local quantity that depends on the derivatives of the likelihood function, the Ziv-Zakai and Weiss-Weinstein bounds are able to access the global topology of the parameter domain. This is particularly transparent when we observe that equations (\ref{qzzb}) and (\ref{qwwb}) are given in terms of the fidelity $|f(\theta)|^2$.  
+
+These bounds can provide useful information about the non-asymptotic regime where the number of repetitions is low, but they also present important limitations. For example, the quantum Ziv-Zakai bound can recover the asymptotic scaling given by the Cram\'{e}r-Rao bound, but it is not tight in general \cite{tsang2012}. The situation improves with the quantum Weiss-Weinstein bound, since it is asymptotically tight. However, it is not guaranteed that we can saturate this bound in the regime with a finite number of measurements \cite{tsang2016}. 
+
+Similar problems arise when we consider other quantum bounds. For instance, Liu and Yuan \cite{liu2016} introduced the quantum optimal-bias bound by optimising the trade-off between bias and variance in the scalar version of equation (\ref{msedecomposition}). This result is also valid for all $\mu$, but it is lower than the Cram\'{e}r-Rao bound by construction and, as we will see, the latter is sometimes lower than the optimal error when it is applied out of its regime of applicability. 
+
+In addition, there exists a Bayesian version of the Cram\'{e}r-Rao bound based on the van Trees inequality \cite{gill1995}. Unfortunately, its derivation requires that the prior probability satisfies the boundary conditions $p(a) \rightarrow 0$ and $p(b) \rightarrow 0$, and this excludes the case of a flat prior between $a$ and $b$. 
+
+Some of these caveats are also inherited by the multi-parameter generalisation of these results, as the multi-parameter Ziv-Zakai bound introduced by Zhang and Fan \cite{zhang2014} exemplifies. Worse, in some cases we can even lose the computational advantage provided by the use of bounds, which is precisely what happens with the multi-parameter Weiss-Weinstein bound \cite{tsang2016}. 
+
+Due to these difficulties, we will not employ these types of bounds to derive our results. Nonetheless, in chapter \ref{chap:limited} we compare the single-parameter Ziv-Zakai and Weiss-Weinstein bounds in equations (\ref{qzzb} - \ref{qwwbpriorterm}) with the results that arise from our proposed strategy, and we show that our methodology is a superior choice to study the non-asymptotic regime of the practical situations under consideration. 
+
+\subsection{The single-shot paradigm}
+\label{subsec:singleshotparadigm}
+
+Instead of addressing a multi-parameter experiment that is repeated $\mu$ times directly, let us change our strategy and focus our attention on a simpler scenario first: a single shot of a system with one parameter. Since $\mu = 1$, collective measurements do not arise, and thus the optimal strategy that satisfies Helstrom and Holevo's condition in equation (\ref{optequations}) presents no practical difficulty. Moreover, the solution for the squared deviation function is known \cite{personick1971, helstrom1976, macieszczak2014bayesian}. We dedicate the rest of this section to review this result. 
+
+Assuming that the probe state $\rho_0$ and the unitary operator $U(\theta)$ are known, we wish to optimise the mean square error
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} = \int d\theta dm~p(\theta,m) \left[g(m)-\theta\right]^2,
+\label{singlemse}
+\end{equation}
+which arises from equation (\ref{msethesis}) when $\mu = 1$ and $d = 1$, over all possible measurement schemes and estimators. Following Macieszczak \emph{et al.} \cite{macieszczak2014bayesian}, first we rewrite equation (\ref{singlemse}) as 
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} = \int d\theta p(\theta) \theta^2 + \mathrm{Tr}(S_2 \rho - 2 S \bar{\rho}),
+\label{mseqform}
+\end{equation}
+where $\rho = \int d\theta p(\theta)\rho(\theta)$ and $\bar{\rho} = \int d\theta p(\theta)\rho(\theta) \theta$ are state moments, and having the POM and estimator inside the operators $S = \int dm~ g(m)E(m)$ and $S_2 = \int dm~ g(m)^2E(m)$. 
+
+The measurement scheme $E(m)$ is completely general. However,  Macieszczak \emph{et al.} \cite{macieszczak2014bayesian} proved that restricting the possible POMs to the class of projective measurements does not lead to a loss of optimality. To see it, let us rewrite the operators $S$ and $S_2$ as
+\begin{equation}
+S = \int dg~g E(g), ~~S_2 = \int dg~g^2 E(g),
+\end{equation}
+where we have used $E(g) = \int dm~\delta(g(m)-g) E(m)$ to relabel the POM elements with the estimates, and notice that 
+\begin{equation}
+S_2 - S^2 = \int dg~g^2 E(g) - \left[\int dg~g E(g)\right]^2 \geqslant 0
+\end{equation}
+due to the operator version of Jensen's inequality\footnote{Given a convex function $f(t)$, Jensen's operator inequality establishes that $\int dt~E(t)f(t) \geqslant f\left[\int dt~E(t)t\right] $ \cite{hansen2003, macieszczak2014bayesian}.} \cite{hansen2003, macieszczak2014bayesian}. This implies that $\mathrm{Tr}(S_2 \rho) \geqslant \mathrm{Tr}(S^2 \rho)$, which can be saturated by choosing a projective measurement; consequently, in the latter case we have that
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} = \int d\theta p(\theta) \theta^2 + \mathrm{Tr}\left(\rho S^2 - 2\bar{\rho}S\right).
+\label{quantumse}
+\end{equation}
+
+The final step to find the optimum is to minimise the latter equation with respect to $S$, arriving at \cite{personick1971, macieszczak2014bayesian}
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} \geqslant \int d\theta p(\theta)\theta^2 - \mathrm{Tr}\left(\bar{\rho}S\right),
+\label{singleshot_bound}
+\end{equation}
+where now $S$ satisfies $S\rho + \rho S  = 2\bar{\rho}$. This is the minimum uncertainty.
+
+A key advantage of this result is that the single-shot optimal strategy can be explicitly constructed from 
+\begin{equation}
+S = \int ds~s E(s) = \int ds~s \ketbra{s},
+\label{singleshot_strategy}
+\end{equation}
+since the inequality in equation (\ref{singleshot_bound}) is saturated when the projectors $\lbrace \ket{s}\rbrace$ associated with the estimates $\lbrace s\rbrace$ are used as the measurement scheme. In fact, the eigenvalues $\lbrace s\rbrace$ are precisely the estimates given by the mean of the posterior density $p(\theta|s)\propto p(\theta) p(s|\theta)$ \cite{personick1971}, which is the classical solution for the optimal estimator \cite{jaynes2003, jesus2017, rafal2015}, and for that reason we will refer to the observable $S$ as the optimal quantum estimator.
+
+Since equation (\ref{singleshot_strategy}) provides the optimal strategy, it must fulfil Helstrom and Holevo's condition in equation (\ref{optequations}). That this is indeed the case was shown by Helstrom in \cite{helstrom1976}. Following his discussion, we start by noticing that, in this case, $Q(g) = \int dg ~ p(\theta) \rho(\theta)(g-\theta)^2 =  g^2\rho - 2 g \bar{\rho} + \rho_2$, where $\rho_2 = \int d\theta p(\theta) \rho(\theta)\theta^2$. We may now use this and the optimal POM $\lbrace \ketbra{s} \rbrace$ to construct the operator $Y$ given in equation (\ref{optequations}), finding that
+\begin{equation}
+Y = S^2\rho - 2 S \bar{\rho} + \rho_2 = \rho S^2 - 2 \bar{\rho} S + \rho_2.
+\label{optoperator}
+\end{equation}
+The goal is then to show that $Q(g) - Y$ is semi-definitive positive. To achieve this, let us rewrite $Y$ as $Y = \rho_2 - S \rho S$ by using the two forms in equation (\ref{optoperator}) and the equation satisfied by the optimal quantum estimator $S$ \cite{helstrom1976}. Similarly, $Q(g) = \rho_2 + g \rho g -  g \rho S -  S \rho g$. Hence, $Q(g) - Y = (S - g\mathbb{I})\rho(S - g\mathbb{I})$ and \cite{helstrom1976}
+\begin{equation}
+\langle u|\left[ Q(g) - Y \right] |u\rangle = \langle u| (S - g\mathbb{I})\rho(S - g\mathbb{I}) |u\rangle \geqslant 0,
+\end{equation}
+as required, since $|u\rangle$ can be any state and we may choose $|u\rangle = (S - g\mathbb{I})^{-1} |\bar{u}\rangle$, with $|\bar{u}\rangle$ arbitrary \cite{helstrom1976}.
+
+Equation (\ref{singleshot_bound}) was originally discovered by Personick \cite{personick1969thesis, personick1971} and explored by him and others in the context of communication theory \cite{personick1969thesis, personick1971, helstrom1976}, and it has been more recently used to study a depolarizing channel \cite{mashide2002}, for frequency estimation \cite{macieszczak2014bayesian}, for magnetic sensing \cite{sekatski2017} and to estimate the coupling strengh of an optomechanical system \cite{bernad2018}. Moreover, a formally similar result emerges in the construction of the quantum Allan variance \cite{chabuda2016allanvariance}. Nevertheless, this result does not appear to have been fully exploited to study phase estimation in the regime of limited data and an intermediate prior that we are considering here.
+
+As with the Cram\'{e}r-Rao bound, the results derived from the optimal single-shot mean square error will be fundamental and achievable, and there is an algorithm to calculate the optimal strategy explicitly. One of the central ideas in this thesis is the proposal of a practical way of exploiting this result for $\mu \neq 1$ and $d\neq 1$. 
+
+\subsection{A new derivation of the optimal single-shot mean square error for a single parameter}
+\label{subsec:originalderivation}
+
+The final idea that we need to construct our non-asymptotic framework, which we discuss now, emerges in a rather surprising way when we derive the optimal single-shot mean square error using a different method. To the best of our knowledge, the path that we follow in this section has not been considered in existing literature. 
+
+Given the single-parameter error in equation (\ref{singlemse}), our first step is to perform a classical optimisation over all the possible estimators. If we look at $\bar{\epsilon}_{\mathrm{mse}}$ in equation (\ref{singlemse}) as a functional of $g(m)$, then we can formulate the variational problem \cite{jaynes2003}
+\begin{equation}
+\delta \bar{\epsilon}_{\mathrm{mse}}\left[g(m)\right] = \delta \int dm~\mathcal{L}\left[m, g(m) \right] = 0,
+\label{variationprob}
+\end{equation}
+where we have defined the object $\mathcal{L}\left[m, g(m) \right] = \int d\theta p(\theta, m)\left[g(m) - \theta\right]^2$, and, mathematically, equation (\ref{variationprob}) is equivalent to requiring that \cite{mathematics2004}
+\begin{equation}
+\frac{d \bar{\epsilon}_{\mathrm{mse}}\left[g(m)+\beta h(m)\right]}{d\beta} \bigg\rvert_{\beta = 0} = 0,~~\text{for~all}~~h(m). 
+\end{equation}
+In our case we have that
+\begin{align}
+\frac{d \bar{\epsilon}_{\mathrm{mse}}\left[g(m)+\beta h(m)\right]}{d\beta} &= \frac{d}{d\beta} \int dm~\mathcal{L}\left[m, g(m) + \beta h(m) \right] 
+\nonumber \\
+&= 2 \int d\theta dm~p(\theta, m) \left[ g(m) + \beta h(m) - \theta \right] h(m),
+\label{firstvariation}
+\end{align}
+which means that the requirement to find the extrema of the error is
+\begin{equation}
+\frac{d \bar{\epsilon}_{\mathrm{mse}}\left[g(m)+\beta h(m)\right]}{d\beta} \bigg\rvert_{\beta = 0} = 2 \int d\theta dm~p(\theta, m) \left[ g(m) - \theta \right] h(m) = 0,
+\label{variationcondition}
+\end{equation}
+and this implies that $\int d\theta p(\theta, m) [g(m) - \theta] = 0$ if equation (\ref{variationcondition}) it is to be satisfied by an arbitrary $h(m)$. By decomposing the joint probability as $p(\theta, m) = p(m) p(\theta|m)$, where the posterior satisfies that $p(\theta|m) \propto p(\theta)p(m|\theta)$, we see that the solution $g(m) = \int d\theta p(\theta|m) \theta$ makes the error $\bar{\epsilon}_{\mathrm{mse}}\left[g(m)\right]$ in equation (\ref{singlemse}) extremal, which is a well-known result in probability theory\footnote{Interestingly, we may say that $\mathcal{L} = \int d\theta p(\theta, m)\left[g(m) - \theta\right]^2$, $\int d\theta p(\theta, m) [g(m) - \theta] = 0$ and the estimator $g(m) = \int d\theta p(\theta|m) \theta$ are to Bayesian estimation theory what the Lagrangian, the Euler-Lagrange equations and the trajectory of the system are to analytical mechanics, respectively.} \cite{jaynes2003}.
+
+To verify that this is a minimum we can use the functional version of the second derivative test. Calculating the second variation from equation (\ref{firstvariation}) we see that
+\begin{equation}
+\frac{d^2 \bar{\epsilon}_{\mathrm{mse}}\left[g(m)+\beta h(m)\right]}{d\beta^2} \bigg\rvert_{\beta = 0} = 2 \int d\theta dm~p(\theta, m) h(m)^2 > 0
+\end{equation}
+for non-trivial variations; consequently, choosing the estimator $g(m) = \int d\theta p(\theta|m) \theta$ gives the minimum mean square error. 
+
+Upon introducing $g(m) = \int d\theta p(\theta|m) \theta$ in equation (\ref{singlemse}) we thus find the bound
+\begin{align}
+\bar{\epsilon}_{\mathrm{mse}} \geqslant ~& \epsilon_{\mathrm{opt}}^c = \int dm~p(m) \left\lbrace \int d\theta p(\theta|m) \theta^2 -  \left[\int d\theta p(\theta|m) \theta \right]^2 \right\rbrace
+\nonumber \\
+& = \int d\theta p(\theta) \theta^2  - \int \frac{dm}{\int d\theta p(\theta)p(m|\theta)}\left[\int d\theta p(\theta)p(m|\theta) \theta \right]^2,
+\label{classicalbound}
+\end{align}
+where the second line can be obtained by noticing that $\int dm~p(m) p(\theta|m) = p(\theta)$ and using Bayes theorem (see section \ref{sec:probability}). 
+
+The first line of equation (\ref{classicalbound}) is the familiar expression for the variance of the posterior probability averaged over the probability $p(m)$, which represents the theoretical information about the possible values for the outcomes. The second expression, on the other hand, contains a term that displays a remarkable similarity with the expression for the classical Fisher information in equation (\ref{fishersingleparameter}), and this formal analogy becomes even more apparent when we further consider the quantum part of the problem. In particular, by inserting $p(m|\theta) = \mathrm{Tr}[E(m) \rho(\theta)]$ in equation (\ref{classicalbound}) we find that
+\begin{equation}
+\epsilon_{\mathrm{opt}}^c = \int d\theta p(\theta)\theta^2 - \int dm  \frac{\mathrm{Tr}\left[ E(m) \bar{\rho} \right]^2}{\mathrm{Tr}\left[ E(m) \rho \right]},
+\label{bayesanalogygen}
+\end{equation}
+with $\rho = \int d\theta p(\theta) \rho(\theta)$ and $\bar{\rho} = \int d\theta p(\theta) \rho(\theta) \theta$. This suggests that it may be possible to bound this term with a procedure similar to the proof proposed by Braunstein and Caves \cite{BraunsteinCaves1994} to derive the quantum Cram\'{e}r-Rao bound.
+
+Following this analogy we can introduce the Bayesian counterpart of the equation for the symmetric logarithmic derivative in section \ref{subsec:crb}, that is, $S \rho + \rho S = 2\bar{\rho}$\footnote{However, note that $\bar{\rho}$ is not a derivative.}. This allows us to manipulate the second term in the right hand side of equation (\ref{bayesanalogygen}) as 
+\begin{align}
+\int dm  \frac{\mathrm{Tr}\left[ E(m) \bar{\rho}_u \right]^2}{\mathrm{Tr}\left[ E(m) \rho \right]} &= \int dm\left(\frac{\mathrm{Re}\left\lbrace\mathrm{Tr}\left[E(m) S\rho\right]\right\rbrace}{\sqrt{\mathrm{Tr}\left[ E(m) \rho\right]}}\right)^2 
+\nonumber \\
+&\leqslant  \int dm~\abs{\frac{\mathrm{Tr}\left[E(m) S\rho\right]}{\sqrt{\mathrm{Tr}\left[ E(m) \rho\right]}}}^2
+\nonumber \\
+&=\int dm~ \abs{\mathrm{Tr}\left[\frac{\rho^{\frac{1}{2}}E(m)^{\frac{1}{2}}}{\sqrt{\mathrm{Tr}\left[ E(m) \rho \right]}} E(m)^{\frac{1}{2}}S \rho^{\frac{1}{2}}\right]}^2 
+\nonumber \\
+&\leqslant  \int dm~ \mathrm{Tr}\left[ E(m) S \rho S \right] = \mathrm{Tr}(\rho S^2) = \mathrm{Tr}\left(\bar{\rho} S \right) ,
+\label{qinequalities}
+\end{align}
+where we have used the Cauchy-Schwarz inequality 
+\begin{equation}
+|\mathrm{Tr}[X^\dagger Y ]|^2 \leqslant \mathrm{Tr}[ X^\dagger X] \mathrm{Tr}[Y^\dagger Y]
+\end{equation}
+with $X = E(m)^{\frac{1}{2}} \rho^{\frac{1}{2}}/\sqrt{\mathrm{Tr}\left[ E(m) \rho \right]}$, $Y = E(m)^{\frac{1}{2}} S \rho^{\frac{1}{2}}$. As expected, the operations performed in equation (\ref{qinequalities}) are formally identical to those appearing in the proof of the Braunstein-Caves inequality \cite{BraunsteinCaves1994, genoni2008}. 
+
+The combination of equations (\ref{classicalbound} - \ref{qinequalities}) finally gives us the chain of inequalities
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}} \geqslant \epsilon_{\mathrm{opt}}^c \geqslant \epsilon_{\mathrm{opt}}^q = \int d\theta p(\theta) \theta^2 - \mathrm{Tr}(\bar{\rho} S),
+\label{chain}
+\end{equation}
+where the second term in $\epsilon_{\mathrm{opt}}^q$ can be seen as a Bayesian counterpart of the quantum Fisher information. 
+
+From our discussion of the classical optimisation we see that the first inequality in equation (\ref{chain}) is saturated when the estimator is given by the average over the posterior. On the other hand, the quantum bound in equation (\ref{qinequalities}) relies on two inequalities. The first of them is saturated when $\mathrm{Tr}[E(m)S\rho]$ is real, while the Cauchy-Schwarz inequality is saturated if and only if $X \propto Y$ for some proportionality constant \cite{helstrom1968multiparameter}. In our case this implies that
+\begin{equation}
+\frac{E(m)^{\frac{1}{2}}\rho^{\frac{1}{2}}}{\mathrm{Tr}\left[E(m) \rho \right]} = \frac{E(m)^{\frac{1}{2}}S\rho^{\frac{1}{2}}}{\mathrm{Tr}\left[E(m) S \rho \right]}.
+\end{equation}
+
+These conditions are fulfilled by constructing a POM based on the projections onto the eigenstates of $S$. To verify this, let us first consider the eigendecomposition $S = \int ds~s \ketbra{s}$. Then, by using the POM $E(s) =  \ketbra{s}$ we find that
+\begin{align}
+\int ds  \frac{\mathrm{Tr}\left[ E(s) \bar{\rho} \right]^2}{\mathrm{Tr}\left[ E(s) \rho \right]} &= \int ds\left(\frac{\mathrm{Re}\left\lbrace\mathrm{Tr}\left(\ketbra{s} S\rho\right)\right\rbrace}{\sqrt{\mathrm{Tr}\left( \ketbra{s} \rho\right)}}\right)^2
+\nonumber \\
+&= \int ds~ s^2 \mathrm{Tr}\left(\ketbra{s} \rho\right]) = \mathrm{Tr}(\rho S^2),
+\end{align}
+as required, since $\mathrm{Tr}(\rho S^2) = \mathrm{Tr}(\bar{\rho} S)$. Therefore, we have recovered the result for the single-shot mean square error reviewed in section \ref{subsec:singleshotparadigm}. Moreover, further intuition can be gained by noticing that $\mathrm{Tr}(\rho S) = \int d\theta p(\theta) \theta$, so that we can rewrite the quantum bound in equation (\ref{chain}) as
+\begin{equation}
+\bar{\epsilon}_{\mathrm{mse}}\geqslant\Delta \theta^2_p - \Delta S^2_{\rho},
+\label{myexpression}
+\end{equation}
+where we have defined the prior uncertainty as
+\begin{equation}
+\Delta \theta^2_p = \int d\theta p(\theta) \theta^2 - \left[\int d\theta p(\theta) \theta \right]^2
+\end{equation}
+and $\Delta S^2_\rho = \mathrm{Tr} \left(S^2 \rho \right) - \mathrm{Tr}\left(S \rho \right)^2$. In words, the uncertainty of our estimation is lower bounded by the difference between the prior variance and the variance of the optimal quantum estimator.
+
+One could be tempted to argue that by introducing $S \rho + \rho S = 2 \bar{\rho}$ into the derivation we are somehow assuming the answer, as this is indeed the formal solution that arises from the direct optimisation in section \ref{subsec:singleshotparadigm} that combines classical and quantum elements. However, note that this equation is introduced here as a redefinition of $\bar{\rho}$ that allows us to derive a bound, and whose form is imposed by exploiting the formal analogy with the Fisher information. In addition, there is a way to see how $S \rho + \rho S = 2 \bar{\rho}$ emerges without performing the quantum optimisation. If we combine Bayes theorem and the Born rule as
+\begin{equation}
+p(\theta|m) = \frac{p(\theta)\mathrm{Tr}[E(m)\rho(\theta)]}{\int d\theta p(\theta)\mathrm{Tr}\left[E(m)\rho(\theta)\right]},
+\end{equation}
+then we have that $g(m) = \int d\theta p(\theta|m)\theta = \mathrm{Tr}[E(m)\bar{\rho}]/\mathrm{Tr}[E(m)\rho]$ for the optimal estimator. By further rearranging its terms we find that 
+\begin{align}
+0 &= \mathrm{Tr}\left[g(m)E(m) \rho - \bar{\rho}E(m)  \right],
+\nonumber \\
+0 &= \mathrm{Tr}\left[g(m)E(m) \rho + \rho g(m)E(m) - 2\bar{\rho}E(m) \right],
+\nonumber \\
+0 &= \mathrm{Tr}\left[\rho g(m)E(m) - \bar{\rho}E(m) \right],
+\end{align}
+which at this stage are fully equivalent. However, we can rewrite them as
+\begin{eqnarray}
+\mathrm{Tr}\left[L \rho - \bar{\rho}  \right] = 0, ~~ \mathrm{Tr}\left[S \rho + \rho S - 2\bar{\rho} \right]  = 0, ~~ \mathrm{Tr}\left[\rho R - \bar{\rho} \right] = 0,
+\end{eqnarray}
+respectively, after taking the integral over the experimental outcomes, so that they are satisfied when $L \rho = \bar{\rho}$, $S\rho + \rho S = 2\bar{\rho}$ and $\rho R = \bar{\rho}$. Note that these equations are not equivalent, and since we have implicitly assumed that the unknown parameter is a real quantity, we need a quantum estimator that is Hermitian, which in general is only given by $S$. Remarkably, this way of looking at the problem is reminiscent of the quantization rule to upgrade expressions with real quantities from their classical form to their quantum version by replacing c-numbers with q-numbers.
+
+Thus we conclude that while the proofs by Personick \cite{personick1971}, Helstrom \cite{helstrom1976} and Macieszczak \emph{et al.} \cite{macieszczak2014bayesian} are preferred from a mathematical point of view, our presentation provides physically useful insights. Certainly, its major strength is that it clearly separates the classical optimisation from the manipulations associated with the quantum part of the problem, in complete analogy with the original derivation by Braunstein and Caves for the Fisher information \cite{braunstein1996}. This separation between classical and quantum contributions to the process of optimising the error is precisely the insight that we were looking for, and it will provide us with a powerful heuristic intuition to understand why the method proposed in the next section works. 
+
+\section{Constructing a non-asymptotic metrology}
+\label{subsec:constructingmethod}
+
+We finally have all the pieces that we need in order to formulate the central method that we propose in this thesis:
+\begin{enumerate}
+\item A common way of extracting information from reality is to repeat a given experiment a certain number of times while we also exploit quantum features such as squeezing or entanglement in each shot. The number of trials is always finite in practice, and potentially small. Moreover, a realistic amount of prior knowledge will typically be moderate.
+\item According to our discussion in section \ref{sec:uncertainty}, a suitable figure of merit to study this experimental arrangement is the Bayesian square error in equation (\ref{msethesis}). 
+\item Our first step is to consider the optimisation of the estimator and that of the quantum strategy in a separate fashion. While this separation is commonly exploited in the context of the Cram\'{e}r-Rao bound (section \ref{subsec:crb}), both minimisations are usually merged when the Bayesian approach is employed (sections \ref{subsec:fundeq} and \ref{subsec:singleshotparadigm}). Our discussion in section \ref{subsec:originalderivation} demonstrates that splitting the problem in this way is also meaningful within the Bayesian framework.
+\item We will choose the Bayesian estimator that is optimal with respect to the square error criterion for any number of repetitions. Therefore, this part of the problem will always be exact in all our calculations. 
+\item The quantum strategy will be selected in two ways. One of them is to use the asymptotic regime as a guide and consider quantum schemes that are asymptotically optimal according to the Cram\'{e}r-Rao bound. The solutions that emerge from this method, which is based on a direct analysis of the non-asymptotic uncertainties that we calculate, provide less general but useful information about the non-asymptotic regime\footnote{Note that the optimal Bayesian estimator can approach the Cram\'{e}r-Rao bound asymptotically in the same way that the maximum of the likelihood does. We will recall the arguments showing that this is the case in chapters \ref{chap:nonasymptotic} and \ref{chap:networks}.}.
+\item A different possibility is to select the quantum scheme that is optimal for a single shot of the experiment, and then repeat this strategy as many times as the application at hand demands or allows for. To achieve this, we will exploit the quantum square error in sections \ref{subsec:singleshotparadigm} and \ref{subsec:originalderivation}, and in chapter \ref{chap:multibayes} we will generalise this result to cover the multi-parameter regime. This procedure generates uncertainties that have been optimised in a shot-by-shot fashion and, as such, we are only optimising the resources that we need.  
+\end{enumerate}
+
+One may see the first procedure to select the quantum strategy as analogous to a semiclassical approximation, where the Fisher information and the Cram\'{e}r-Rao bound are to the Bayesian uncertainty what the part of the problem that is modelled by classical mechanics is to the quantum degrees of freedom. This contrasts with the different logic that is followed by the shot-by-shot method, which instead of optimising the protocol assuming that we will have many trials, it selects a strategy with a good performance for the experiments that will actually be performed. 
+
+Other techniques could be more general. However, our method provides a direct link with the reality of experimental practice, while, at the same time, we will see that it relies on computations that are generally tractable. We recall that we do not apply Helstrom and Holevo's method in its most general way (section \ref{subsec:fundeq}), neither shall we use the Holevo Cram\'{e}r-Rao bound directly\footnote{Although if we can saturate the multi-parameter quantum Cram\'{e}r-Rao bound, then we are also saturating the version given by Holevo \cite{sammy2016compatibility}.}, because our model represents repetitions and, as such, it excludes the possibility of considering collective measurements. Furthermore, we have also excluded the application of lower bounds for which it is not clear whether they are tight in the regime of limited data, as is the case in general for the proposals considered in section \ref{subsec:alternativebounds}.
+
+The rest of this work is dedicated to implementing this programme, and its potential application shall be illustrated by analysing the performance predicted by our methodology for optical interferometers and quantum sensing networks. 
+
+\section{Summary of results and conclusions}
+
+In this chapter we have laid a bridge between the results that are available in the literature and those that we intend to derive in the following chapters. We have reviewed the fundamental equations that the optimal quantum strategy needs to satisfy in the Bayesian framework, identifying its strengths in the single-shot regime, and acknowledging its practical limitations when collective measurements are allowed. We have also discussed the useful aspects of an approach based on bounding the estimation error, with a particular emphasis on the potentially fundamental character of the Cram\'{e}r-Rao bound in the regime of many repetitions.  
+
+Furthermore, we have offered a new perspective on the derivation of the quantum strategy that makes the mean square error optimal for a single shot. A key novelty is the explicit separation of the classical and quantum contributions to the optimisation of the uncertainty, in analogy with Braunstein and Caves's original derivation of the inequality for the Fisher information \cite{BraunsteinCaves1994}. This formal connection between Bayesian quantities and those associated with Fisher methods has appeared in \cite{jesus2019b}
+\begin{displayquote}
+\emph{Bayesian multi-parameter quantum metrology with limited data}, \underline{Jes\'{u}s Rubio} and Jacob Dunningham, arXiv:1906.04123 (2019).
+\end{displayquote}
+
+From the analysis of these results we propose a strategy to study and design experiments that takes into account the challenges faced in practice, focusing our attention on limited amounts of measurement data and moderate prior knowledge. In particular, it is argued that the classical part of the problem can always be treated exactly, while the quantum part can be approximated to make the optimisation more tractable. This is the case if we employ the asymptotic regime given by the Cram\'{e}r-Rao bound as a guide. Alternatively, a more powerful approach is to repeat the quantum strategy that is optimal for a single shot. The philosophy of both methods, being completely different, can complement each other, since the former assumes in advance that a large number of experiments will eventually be performed while the latter only focus on those that will actually happen. 
+
+Finally, we have carried out a detailed analysis of how different measures of uncertainty should be used in metrology, and the quantity that is relevant for our purposes has been identified, which provides our results with a strong conceptual and physically rigorous foundation. The three-step construction based on the characteristics of experiments, simulations and theoretical studies was included in \cite{jesus2017}
+\begin{displayquote}
+\emph{Non-asymptotic analysis of quantum metrology protocols beyond the Cram\'{e}r-Rao bound}, \underline{Jes\'{u}s Rubio}, Paul Knott and Jacob Dunningham, J. Phys. Commun. 2 015027 (2018).
+\end{displayquote}
+ 

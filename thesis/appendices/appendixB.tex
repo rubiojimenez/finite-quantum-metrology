@@ -1,0 +1,868 @@
+\chapter{Numerical toolbox for quantum interferometry}
+\label{app:numsingle}
+
+In this appendix we present a collection of algorithms that together allow to reproduce the numerical results for optical interferometry in chapters \ref{chap:nonasymptotic}, \ref{chap:limited} and \ref{chap:future}. Most of the codes are written in MATLAB, the only exception being the second algorithm in appendix \ref{sec:singleshotalgorithm}, which has been developed in Mathematica.
+
+\section{Basic elements and initial states}
+\label{sec:elementsnum}
+
+Operators in the space of a single electromagnetic mode:
+\begin{lstlisting}[language=Matlab]
+function [creat] = creation(dimension)
+% Matrix representation of the creation operator, where 'dimension' is
+% the cutoff of the space.
+creat=zeros(dimension,dimension);
+for aa=1:dimension
+    for bb=1:dimension
+        if aa == (bb+1); creat(aa,bb)=sqrt(bb);
+        else; creat(aa,bb)=0;
+        end
+    end
+end
+creat=sparse(creat); end
+\end{lstlisting}
+
+\begin{lstlisting}[language=Matlab]
+function [id] = identity(dimension)
+% Identity matrix
+id=eye(dimension);
+id=sparse(id); end
+\end{lstlisting}
+
+\justify{Optical elements:}
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function [j1] = j1schwinger(dimension)
+% Matrix representation of the J1 operator (Jordan-Schwinger map).
+j1=0.5*(kron(creation(dimension),creation(dimension)') + kron(creation$\hspace{0.15em}\swarrow$
+(dimension)',creation(dimension)));
+j1=sparse(j1); end
+\end{lstlisting}
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function [j3] = j3schwinger(dimension)
+% Matrix representation of the J3 operator (Jordan-Schwinger map).
+j3=0.5*(kron(creation(dimension)*creation(dimension)',identity$\hspace{0.15em}\swarrow$
+(dimension))-kron(identity(dimension),creation(dimension)*creation$\hspace{0.15em}\swarrow$
+(dimension)'));
+j3=sparse(j3); end
+\end{lstlisting}
+
+\begin{lstlisting}[language=Matlab]
+function [v] = beam_splitter(dimension)
+% Matrix representation of a 50:50 beam splitter. 
+v=expm(-1i*0.5*pi*sparse(j1schwinger(dimension)));
+v=sparse(v); end
+\end{lstlisting}
+
+\begin{lstlisting}[language=Matlab]
+function [utheta] = phase_shift_diff(dimension, theta)
+% Matrix representation of the unitary encoding of the unknown parameter 
+% 'theta' (difference of phase shifts).
+utheta=expm(-1i*theta*j3schwinger(dimension));
+utheta=sparse(utheta); end
+\end{lstlisting}
+
+\justify{Initial probe states for a Mach-Zehnder interferometer:}
+\begin{lstlisting}[language=Matlab]
+function [zero] = vacuum(dimension)
+% Vacuum state for a single mode.
+temp=identity(dimension);
+zero=temp(:,1);
+zero=sparse(zero); end
+\end{lstlisting}
+
+\begin{lstlisting}[language=Matlab]
+function [displ] = displacement(dimension,alpha)
+% Matrix representation of the displacement operator, where 'alpha' is
+% the amount of displacement. 
+displ=expm(alpha*creation(dimension)-conj(alpha)*creation(dimension)');
+displ=sparse(displ); end
+\end{lstlisting}
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function [squ] = squeeze(dimension,zeta)
+% Matrix representation of the squeezing operator for a single mode, 
+% where 'zeta' is the squeezing parameter.
+squ=expm(0.5*(conj(zeta)*(creation(dimension)')^2-zeta*(creation$\hspace{0.15em}\swarrow$
+(dimension))^2));
+squ=sparse(squ); end
+\end{lstlisting}
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function  [initial_state] = initial_probe(state_sel)
+% Common states in optical interferometry, where  'state_sel' is a number
+% from 1 to 5 labelling the quantum probes
+%
+%   (1) Coherent state: |alpha/sqrt(2),-i*alpha/sqrt(2)>
+%   (2) NOON state: (|N,0>+|0,N>)/sqrt(2)
+%   (3) Twin squeezed vacuum state: S_a(z)S_b(z)|0,0>
+%   (4) Squeezed entangled state: N (|z,0> + |0,z>)
+%   (5) Twin squeezed cat state: [N S(z)(|alpha>+|-alpha>)]\otimes2
+%
+% whose componentes are generated in the number basis of a Mach-Zehnder 
+% interferometer.
+%
+% The code is configured with the parameters
+%
+%   (1) alpha=sqrt(2)
+%   (2) N=2
+%   (3) z=asinh(1)
+%   (4) z=log(2+sqrt(3))
+%   (5) alpha=0.960149, z=1.2145
+%
+% so that the nbar number of quanta that enters the interferometer is 2.
+%
+% The cutoff for the vectors are: (1) 20, (2) 2, (3) 50, (4) 60 
+% and (5) 50. These values are selected such that the numerical states 
+% are a reasonable approximation to the analytical kets.
+
+% State parameters
+nbar=2;
+number=nbar; % Mean number of photons
+alpha=sqrt(nbar); % Displacement parameter
+zeta=asinh(sqrt(nbar/2)); % Squeezing parameter
+zent=log(2+sqrt(3));
+
+alphacat=0.960149; % Maximum Fisher information for the twin squeezed 
+zcat=1.2145;         % cat state
+
+%alphacat=1.09048; % Same Fisher information for the twin squeezed cat 
+%zcat=1.1025;        % state and the squeezed entangled state
+
+if state_sel==1
+    num_cutoff=20; % Cutoff for states
+elseif state_sel==2
+    num_cutoff=number;
+elseif state_sel==3 || state_sel==5
+    num_cutoff=50;
+elseif state_sel==4
+    num_cutoff=60;
+end
+op_cutoff=num_cutoff+1; % Cutoff for operators
+
+% Initial state
+if state_sel==1
+    initial_temp=sparse(displacement(op_cutoff,alpha)*vacuum(op_cutoff));
+    initial_state=sparse(kron(initial_temp,vacuum(op_cutoff)));
+    initial_state=beam_splitter(op_cutoff)*initial_state;
+elseif state_sel==2
+    initial_temp=sparse((creation(op_cutoff)^number)*vacuum(op_cutoff));
+    initial_state=sparse(kron(initial_temp,vacuum(op_cutoff))+kron(vacuum$\hspace{0.15em}\swarrow$
+(op_cutoff),initial_temp));
+elseif state_sel==3
+    initial_temp1=sparse(squeeze(op_cutoff,zeta)*vacuum(op_cutoff));
+    initial_temp2=sparse(squeeze(op_cutoff,zeta)*vacuum(op_cutoff));
+    initial_state=sparse(kron(initial_temp1,initial_temp2));
+elseif state_sel==4
+    initial_state=(kron(squeeze(op_cutoff,zent),identity(op_cutoff))$\hspace{0.15em}\swarrow$         	
++kron(identity(op_cutoff),squeeze(op_cutoff,zent)))*kron(vacuum$\hspace{0.15em}\swarrow$
+(op_cutoff),vacuum(op_cutoff));
+elseif state_sel==5
+    initial_state=squeeze(op_cutoff,zcat)*(displacement$\hspace{0.15em}\swarrow$
+(op_cutoff,alphacat)+displacement(op_cutoff,-alphacat))*vacuum(op_cutoff);
+    initial_state=kron(initial_state,initial_state);
+    initial_state=initial_state/sqrt((initial_state'*initial_state));
+end
+initial_state=initial_state/sqrt((initial_state'*initial_state)); end
+\end{lstlisting}
+
+\section{Optimal quantum strategies for the square error criterion}
+\label{sec:singleshotalgorithm}
+
+The following algorithm has been utilised to calculate the optimal single-shot strategies in chapter \ref{chap:limited}:
+\begin{enumerate}
+\item The components $c_{nm}$ of $\ket{\psi_0}$ are numerically approximated in a finite space of dimension $d_c$ per mode. For the coherent state this dimension is $d_c=21$, and the number probability for this cutoff is $p_c \sim 10^{-19}$; for the twin squeezed vacuum state we have that $d_c = 51$ and $p_c \sim 10^{-17}$; $d_c = 61$ and $p_c \sim 10^{-5}$ for the squeezed entangled state; and $d_c = 51$ and $p_c \sim 10^{-10}$ for the twin squeezed cat state. This is achieved via the code for generating initial states in the previous appendix.
+\item $\mathcal{K}$ and $\mathcal{L}$ are numerically generated using the formulas in equations (\ref{k_semianalytical_sol}) - (\ref{singularcases}). This allows us to calculate $\rho = \rho_0 \circ \mathcal{K}$ and $\rho = \rho_0 \circ \mathcal{L}$ in the number basis.
+\item The basis of $\rho$ and $\bar{\rho}$ is changed as $\rho_D = \mathcal{V}^\dagger \rho \mathcal{V}$ and $\bar{\rho}_D = \mathcal{V}^\dagger \bar{\rho} \mathcal{V}$, where the columns of $\mathcal{V}$ are given by the eigenvectors $\ket{\phi_i}$ of $\rho$, $(\rho_D)_{ij} = p_i\delta_{ij}$ and $(\bar{\rho}_D)_{ij} = \bra{\phi_i} \bar{\rho} \ket{\phi_j}$.
+Only the eigenvectors $\ket{\phi_i}$ whose eigenvalues $p_i$ satisfy that $p_i \gtrsim 10^{-12}$ are employed. 
+\item Now we can calculate the elements $(S_D)_{ij} = \bra{\phi_i} S \ket{\phi_j}=2(\bar{\rho}_D)_{ij}/(p_i + p_j)$ directly.
+\item We return to the original basis using $S=\mathcal{V} S_D \mathcal{V}^\dagger$.
+\item Finally, we calculate the spectral decomposition of $S$, which gives us the estimates $\lbrace s\rbrace$ and the projectors $\lbrace \ket{s}\rbrace$.
+\end{enumerate}
+Its implementation in MATLAB is:
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function [Sopt,sopt,soptvec_columns,bayes_bound,rho,pk,psik,rhobar,$\hspace{0.15em}\swarrow$
+rhobarnew] = mz_optimal_1trial(initial_state,phase_width,phase_mean)
+% Optimal single-shot strategy, where 'initial_state' is a pure state 
+% for the Mach-Zehnder interferometer, 'phase_width' is the width of the 
+% parameter domain and 'phase_mean' is its centre.
+%
+% This programme calculates:
+%
+%   a) the optimal quantum estimator 'Sopt'
+%   b) the estimates 'sopt' for the unknown parameter given by the
+%      spectrum of 'Sopt'
+%   c) the optimal projective measurement for a single trial given by
+%      the eigenvectors 'soptvec_columns' of 'Sopt'
+%   d) the optimal single-shot mean square error 'bayes_bound'
+%   e) the zero-th quantum moment of the transformed density matrix 'rho'
+%   f) 'rho' in its diagonal basis, denoted by 'pk'
+%   g) the matrix 'psik' whose columns are the eigenvectors of 'rho'
+%   h) the first quantum moment of the transformed density matrix 'rhobar'
+%   i) 'rhobar' in the eigenbasis of 'rho', denoted by 'rhobarnew'
+
+% Calculation of 'rho' and 'rhobar'
+index=1;
+kvec=zeros(1,length(initial_state)^2);
+lvec=zeros(1,length(initial_state)^2);
+for x1=1:sqrt(length(initial_state))
+    for y1=1:sqrt(length(initial_state))
+        for z1=1:sqrt(length(initial_state))
+            for t1=1:sqrt(length(initial_state))
+                if (x1-1)-(y1-1)+(t1-1)-(z1-1)==0
+                    K=phase_width;
+                    L=phase_mean*phase_width;
+                else
+                    comp_temp=(x1-1)-(y1-1)+(t1-1)-(z1-1);
+                    exp_temp=exp(-1i*comp_temp*phase_mean/2);
+                    sin_temp=sin(comp_temp*phase_width/4);
+                    cos_temp=cos(comp_temp*phase_width/4);
+                    K=4*exp_temp*sin_temp/comp_temp;
+                    L=exp_temp*(4*phase_mean*sin_temp/comp_temp$\hspace{0.15em}\swarrow$ 
++1i*2*phase_width*cos_temp/comp_temp - 1i*8*sin_temp/comp_temp^2);
+                end
+                kvec(index)=K/phase_width;
+                lvec(index)=L/phase_width;
+                index=index+1;
+            end
+        end
+    end
+end
+
+kmat=sparse(vec2mat(kvec,sqrt(length(kvec))));
+lmat=sparse(vec2mat(lvec,sqrt(length(lvec))));
+initial_rho=kron(initial_state,initial_state');
+rho=initial_rho.*kmat; rhobar=initial_rho.*lmat;
+rho=full(rho); rhobar=full(rhobar);
+
+% Eigenvalues and eigenvectors of 'rho'
+[psik, pk] = eigs(rho,rank(rho));
+psik=sparse(psik);
+pk=sparse(pk);
+
+pkvec=zeros(1,length(pk));
+for x=1:length(pk)
+    pkvec(x)=pk(x,x);
+end
+
+% 'rhobar' in the eigenbasis of 'rho'
+rhobarnew=psik'*rhobar*psik;
+
+% Optimal single-shot strategy: projectors and outcomes
+Sopt_temp=zeros(length(pkvec),length(pkvec));
+for a=1:length(pkvec)
+    for b=1:length(pkvec)
+        if pkvec(a)+ pkvec(b)>0
+            Sopt_temp(a,b)=2*rhobarnew(a,b)/(pkvec(a)+pkvec(b));
+        end
+    end
+end
+
+Sopt_temp=sparse(Sopt_temp);
+Sopt=psik*Sopt_temp*psik';
+Sopt=full(Sopt);
+
+[soptvec_columns, sopt_temp] = eigs(Sopt,rank(Sopt));
+sopt=zeros(1,length(sopt_temp));
+for x=1:length(sopt_temp)
+    sopt(x)=sopt_temp(x,x);
+end
+soptvec_columns=sparse(soptvec_columns);
+sopt=sparse(sopt);
+if imag(sopt)<1e-5; sopt=real(sopt);
+else
+    error('The estimates of the unknown parameter must be real. Check$\hspace{0.15em}\swarrow$
+the cutoff in the intermediate calculations.')
+end
+
+% Phase domain
+phase=linspace(phase_mean-phase_width/2,phase_mean+phase_width/2,1000);
+
+% Optimal single-shot mean square error
+bayes_bound=trapz(phase,phase.*phase)/phase_width - trace(Sopt*Sopt*rho);
+if imag(bayes_bound)<1e-10; bayes_bound=real(bayes_bound);
+else
+    error('The mean square error must be real. Check the cutoff$\hspace{0.15em}\swarrow$
+in the intermediate calculations.')
+end
+
+end
+\end{lstlisting}
+
+The previous algorithm was extended in our work \cite{jesus2018} to calculate the collective measurement that is optimal on $\mu$ copies of a NOON state (see section \ref{subsec:optnoon}). However, a more economic alternative using Mathematica is:
+
+\begin{mathematicathesis}
+(* Optimal single-shot mean square error for collective POMs on 'mu'$\hspace{0.15em}\swarrow$
+copies of a NOON state *)
+
+(* Number of copies *)
+Clear[mu]
+mu = 4; (* 'mu' must be greater than or equal to 2 *)
+
+(* Transformed density matrix *)
+Clear[nbar, rhotemp, rhotheta]
+nbar = 2;
+rhotemp[theta_] := N[ {{1/2, Exp[-I*nbar*theta]/2},$\hspace{0.15em}\swarrow$
+{Exp[I*nbar*theta]/2, 1/2}}]; 
+rhotheta[theta] = KroneckerProduct[rhotemp[theta ], rhotemp[theta ]];
+Do[rhotheta[theta ] = KroneckerProduct[rhotemp[theta ],$\hspace{0.15em}\swarrow$
+rhotheta[theta ]], {j, mu - 2}]; (* 'j' is the index of repetition *)
+
+(* Prior probability *)
+Clear[priorwidth, priormean, a, b, prior]
+priorwidth = Pi/2.;
+priormean = 0;
+a = priormean - priorwidth/2;
+b = priormean + priorwidth/2;
+prior[theta_] := 1/(b - a);
+
+(* Calculation of 'rho' and its diagonal form*)
+Clear[rho, rhodiag]
+rho = Integrate[prior[theta]*rhotheta[theta], {theta, a, b}];
+rhodiag = DiagonalMatrix[Eigenvalues[rho]];
+
+(* Calculation of 'rhobar' and its form in the eigenbasis of rho*)
+Clear[rhobar, change, rhobardiag]
+rhobar = Integrate[prior[theta]*rhotheta[theta]*theta, {theta, a, b}];
+change = Transpose[Eigenvectors[rho]];
+rhobardiag = Inverse[change].rhobar.change;
+
+(* Optimal quantum estimator *)
+Clear[rhosupp, rhobarsupp, Sopt]
+rhosupp = rhodiag[[1 ;; MatrixRank[rho], 1 ;; MatrixRank[rho]]];
+rhobarsupp = rhobardiag[[1 ;; MatrixRank[rho], 1 ;; MatrixRank[rho]]];
+Sopt = LyapunovSolve[rhosupp/2., rhosupp/2., rhobarsupp];
+
+(* Optimal single-shot mean square error *)
+Clear[emse]
+emse = Round[NIntegrate[prior[theta]*theta^2, {theta, a, b}]$\hspace{0.15em}\swarrow$ 
+- Tr[Sopt.Sopt.rhosupp], 10.^(-7)]
+
+0.0428159 (* Result for mu = 4 *)
+\end{mathematicathesis}
+
+Furthermore, we notice that the single-shot calculation for a lossy interferometer in section \ref{loss} was carried out with a similar version of the Mathematica code above.
+
+\section{Other quantum bounds}
+
+\subsection{Quantum Cram\'{e}r-Rao bound}
+\label{subsec:qcrbmatlab}
+
+\begin{lstlisting}[language=Matlab]
+function [qcrb] = mz_qcrb(initial_state,mu_max)
+% Quantum Cramer-Rao bound as a function of the number of trials, where
+% 'initial_state' is a pure state for the Mach-Zehnder interferometer
+% and 'mu_max' is the maximum number of repetitions.
+
+% Number of repetitions
+observations=1:1:mu_max;
+
+% Space cutoff (for a single mode)
+op_cutoff=sqrt(length(initial_state));
+
+% Quantum Fisher information (pure states and unitary encoding)
+expectation_n=initial_state'*j3schwinger(op_cutoff)*initial_state;
+expectation_n2=initial_state'*j3schwinger(op_cutoff)^2*initial_state;
+qfi=4*(expectation_n2-expectation_n^2);
+
+% Do we have information?
+if qfi==0
+    disp('The Quantum Fisher information is zero.')
+    return
+end
+
+% Quantum Cramer-Rao Bound
+qcrb=1./(observations*qfi);
+
+end
+\end{lstlisting}
+
+\subsection{Quantum Ziv-Zakai bound}
+\label{subsec:qzzbnum}
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function [qzzb] = mz_qzzb(initial_state,phase_width,mu_max)
+% Quantum Ziv-Zakai bound as a function of the number of trials, where
+% 'initial_state' is a pure state for the Mach-Zehnder interferometer,
+% 'phase_width' is the width of the parameter domain and 'mu_max' is 
+% the maximum number of repetitions. 
+
+% Space cutoff (for a single mode)
+op_cutoff=sqrt(length(initial_state));
+
+% Parameter domain
+W=phase_width;
+dim_theta=1000;
+theta=linspace(0,W,dim_theta);
+
+% Fidelity
+fidelity=zeros(dim_theta,1);
+for z=1:dim_theta
+    after_phase_shift=sparse(phase_shift_diff(op_cutoff,theta(z))$\hspace{0.15em}\swarrow$
+*initial_state);
+    fidelity(z)=abs(initial_state'*after_phase_shift)^2;
+end
+
+% Quantum Ziv-Zakai Bound integrand
+integrand=zeros(dim_theta,mu_max);
+for runs=1:mu_max
+    for z=1:dim_theta
+        integrand(z,runs)=0.5.*theta(z).*(1-theta(z)./W)$\hspace{0.15em}\swarrow$
+.*(1-sqrt(1-fidelity(z).^runs));    
+    end
+end
+integrand=sparse(integrand);
+
+% Quantum Ziv-Zakai Bound
+qzzb=trapz(theta,integrand,1);
+
+end
+\end{lstlisting}
+
+\subsection{Quantum Weiss-Weinstein bound}
+\label{subsec:qwwbnum}
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function [qwwb] = mz_qwwb(initial_state,phase_width,mu_max)
+% Quantum Weiss-Weinstein bound as a function of the number of 
+% trials, where 'initial_state' is a pure state for the Mach-Zehnder,
+% interferometer 'phase_width' is the width of the parameter domain 
+% and 'mu_max' is the maximum number of repetitions. 
+
+% Space cutoff (for a single mode)
+op_cutoff=sqrt(length(initial_state));
+
+% Parameter domain
+W=phase_width;
+dim_theta=1000;
+h=linspace(0,W,dim_theta);
+
+% Quantum Weiss-Weinstein Bound
+find_supremum=zeros(mu_max,length(h));
+qwwb=zeros(1,mu_max);
+for runs=1:mu_max
+    for z=1:length(h)
+        zeta=initial_state'*phase_shift_diff(op_cutoff,h(z))*initial_state;
+        zeta2=initial_state'*phase_shift_diff(op_cutoff,2*h(z))$\hspace{0.15em}\swarrow$
+*initial_state;
+        fid_function=abs(zeta)^2;
+        find_supremum(runs,z)=h(z)^2*(1-h(z)/W)^2*fid_function^(2*runs)$\hspace{0.15em}\swarrow$
+/(2*fid_function^runs-2*(1-2*h(z)/W)*real(zeta^(2*runs)*conj(zeta2)^runs));
+    end
+    qwwb(runs)=max(find_supremum(runs,:));
+end
+
+end
+\end{lstlisting}
+
+\section{Measurement strategies}
+\label{sec:pomnum}
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function [outcomes,proj_columns] = mz_pom$\hspace{0.15em}\swarrow$
+(state_choice,pom_choice,phase_width,phase_mean)
+% Outcomes and POM elements of five projective measurement schemes:
+%
+%   1) Optimal single-shot POM
+%   2) 50:50 beam splitter + photon counting
+%   3) 50:50 beam splitter + measurement of quadratures rotated by pi/8
+%   4) Undoing the preparation of the initial state + photon counting
+%   5) 50:50 beam splitter + parity measurements
+%
+% where 'state_choice' labels the initial state, 'pom_choice' selects one
+% of the previous measurement schemes, 'phase_width' is the width of the 
+% phase domain and 'phase_mean' is its centre. 
+%
+% Some extra phase shifts that are assumed to be known have been added 
+% to 2) - 5) in order to make the strategy optimal when the prior is 
+% centred around zero.
+
+% Space cutoff (for a single mode)
+op_cutoff=sqrt(length(initial_probe(state_choice)));
+
+if pom_choice==1
+    % 1) Optimal single-shot POM
+    [~,outcomes,proj_columns,~,~,~,~,~,~]=mz_optimal_1trial(initial_probe$\hspace{0.15em}\swarrow$
+(state_choice),phase_width,phase_mean);
+    
+elseif pom_choice==2
+    % 2) 50:50 beam splitter + photon counting
+        
+    % Observable quantity (number of photons at each port)
+    observable=kron(creation(op_cutoff)*creation(op_cutoff)',creation$\hspace{0.15em}\swarrow$
+(op_cutoff)*creation(op_cutoff)');
+    [proj_columns,outcomes_temp]=eig(full(observable));
+    outcomes=zeros(1,length(outcomes_temp));
+    for x=1:length(outcomes_temp)
+        outcomes(x)=outcomes_temp(x,x);
+    end
+    
+    % Extra phase shift
+    odd_shift=kron(identity(op_cutoff),expm(1i*(pi/2)*creation$\hspace{0.15em}\swarrow$
+(op_cutoff)*creation(op_cutoff)'));
+    even_shift=kron(identity(op_cutoff),expm(1i*(pi/4)*creation$\hspace{0.15em}\swarrow$
+(op_cutoff)*creation(op_cutoff)'));
+    
+    if state_choice==1
+        optimal_shift=odd_shift;
+    else
+        optimal_shift=even_shift;
+    end
+    
+    % Effect of the 50:50 beam splitter
+    proj_columns=optimal_shift'*beam_splitter(op_cutoff)*proj_columns;
+    
+elseif pom_choice==3
+    % 3) 50:50 beam splitter + measurement of quadratures rotated by pi/8
+        
+    % Observable quantity
+    if state_choice==1
+        error('The quadrature POM is not available for coherent states.')
+    else
+        phasequad1=pi/8;
+        phasequad2=phasequad1;
+    end
+    quad1=(creation(op_cutoff)*exp(1i*phasequad1)+creation$\hspace{0.15em}\swarrow$
+(op_cutoff)'*exp(-1i*phasequad1))/sqrt(2);
+    quad2=(creation(op_cutoff)*exp(1i*phasequad2)+creation$\hspace{0.15em}\swarrow$
+(op_cutoff)'*exp(-1i*phasequad2))/sqrt(2);
+    observable=kron(quad1,quad2);
+    [proj_columns,outcomes_temp]=eig(full(observable));
+    outcomes=zeros(1,length(outcomes_temp));
+    for x=1:length(outcomes_temp)
+        outcomes(x)=outcomes_temp(x,x);
+    end
+    
+    % Extra phase shift
+    optimal_shift=kron(expm(-1i*(pi/4)*creation(op_cutoff)*creation$\hspace{0.15em}\swarrow$
+(op_cutoff)'),identity(op_cutoff));
+            
+    % Effect of the 50:50 beam splitter
+    proj_columns=optimal_shift'*beam_splitter(op_cutoff)*proj_columns;
+    
+elseif pom_choice==4
+    % 4) Undoing the preparation of the initial state + photon counting
+    if state_choice==1
+    else
+        error('This POM is only available for coherent states.')
+    end  
+    
+    % Observable quantity (number of photons at each port)
+    observable=kron(creation(op_cutoff)*creation(op_cutoff)',creation$\hspace{0.15em}\swarrow$
+(op_cutoff)*creation(op_cutoff)');
+    [proj_columns,outcomes_temp]=eig(full(observable));
+    outcomes=zeros(1,length(outcomes_temp));
+    for x=1:length(outcomes_temp)
+        outcomes(x)=outcomes_temp(x,x);
+    end
+    
+    % Extra phase shifts
+    optimal_shift=sparse(expm(-1i*pi*j3schwinger(op_cutoff)));
+    
+    % Unitary transformations to undo the preparation of the state
+    bs=sparse(beam_splitter(op_cutoff)');
+    cs_undo=sparse(kron(displacement(op_cutoff,sqrt(2)),identity$\hspace{0.15em}\swarrow$
+(op_cutoff)));
+    combined=cs_undo*bs*optimal_shift;
+    proj_columns=combined'*proj_columns; 
+        
+elseif pom_choice==5
+    % 5) 50:50 beam splitter + parity measurements
+    
+    % Observable quantity (parity of the number of photons at each port)
+    paritya=sparse(kron(identity(op_cutoff),(-1)^(full(creation$\hspace{0.15em}\swarrow$
+(op_cutoff)*creation(op_cutoff)'))));
+    parityb=sparse(kron((-1)^(full(creation(op_cutoff)*creation$\hspace{0.15em}\swarrow$
+(op_cutoff)')),identity(op_cutoff)));
+    observable=full(paritya*parityb);
+    [proj_columns,outcomes_temp]=eig(full(observable));
+    outcomes=zeros(1,length(outcomes_temp));
+    for x=1:length(outcomes_temp)
+        outcomes(x)=outcomes_temp(x,x);
+    end
+    
+    % Extra phase shift
+    odd_shift=kron(identity(op_cutoff),expm(1i*(pi/2)*creation$\hspace{0.15em}\swarrow$
+(op_cutoff)*creation(op_cutoff)'));
+    even_shift=kron(identity(op_cutoff),expm(1i*(pi/4)*creation$\hspace{0.15em}\swarrow$
+(op_cutoff)*creation(op_cutoff)'));
+    
+    if state_choice==1
+        optimal_shift=odd_shift;
+    else
+        optimal_shift=even_shift;
+    end
+    
+    % Effect of the 50:50 beam splitter
+    proj_columns=optimal_shift'*beam_splitter(op_cutoff)*proj_columns;  
+end
+
+end
+\end{lstlisting}
+
+\section{Prior information analysis}
+\label{sec:priormatlab}
+
+This algorithm generates the graphs in chapter \ref{chap:nonasymptotic} for the prior information analysis of the Mach-Zehnder interferometer. A version of this code was also employed for time estimation in section \ref{sec:fundtime}.
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+% Prior information analysis for single-parameter schemes
+%
+% This programme uses Bayes theorem to generate the posterior probability
+%
+% p(theta|m_1, ..., m_mu)
+%
+% for a flat prior and the likelihood function given by the Born rule. 
+% The initial state and the measurement scheme are those of a Mach-Zehnder 
+% interferometer, and they can be selected from the respective MATLAB 
+% functions in our interferometric toolbox by giving a value from 1 to 5
+% for 'state_choice' and 'pom_choice'.
+%
+% Important observations:
+%
+% - The prior is defined over all the parameter domain, so that the 
+% symmetries of the likelihood that enable us to find the intrinsic 
+% width can be visualised. 
+%
+% - The variables 'prior_mean_1shot' and 'prior_width_1shot' are needed
+% to specify the optimal single-shot POM, but they do not affect the
+% other measurement schemes. 
+%
+% - The results for the prior information analysis in chapter 4 are 
+% recovered when we remove the extra phase shifts in the second option
+% of our MATLAB function mz_pom(.) and we select it. This is because
+% the results in chapter 4 were obtained for a prior between 0 and W, 
+% while the POMs included in our sample of codes are those associated
+% with a prior centred around zero (see chapter 5). 
+clear
+
+% State and POM options (see the respective codes in previous sections)
+state_choice=2;
+pom_choice=2;
+
+% Initial state
+initial_state=initial_probe(state_choice);
+
+% Space cutoff
+op_cutoff=sqrt(length(initial_state));
+
+% Parameter domain
+prior_mean=pi;
+prior_width=2*pi; % Complete parameter domain
+a=prior_mean-prior_width/2;
+b=prior_mean+prior_width/2;
+dim_theta=1000;
+theta=linspace(a,b,dim_theta);
+
+% Simulation of the unknown true value
+index_real=160;
+
+% Measurement scheme
+prior_mean_1shot=0;
+prior_width_1shot=pi/2; 
+[outcomes_space,proj_columns] = mz_pom(state_choice,pom_choice,$\hspace{0.15em}\swarrow$
+prior_width_1shot,prior_mean_1shot);
+
+% State after the phase shift, final state and amplitudes
+amplitudes=zeros(length(outcomes_space),dim_theta);
+for z=1:dim_theta
+    after_phase_shift=sparse(phase_shift_diff(op_cutoff,theta(z))$\hspace{0.15em}\swarrow$
+*initial_state);
+    for x=1:length(outcomes_space)
+        pom_element=proj_columns(:,x);
+        amplitudes(x,z)=sparse(pom_element'*after_phase_shift);
+    end
+end
+
+% Likelihood function (using the Born rule)
+likelihood=amplitudes.*conj(amplitudes);
+
+% Prior density function
+prior=ones(1,dim_theta);
+prior=prior/trapz(theta,prior);
+
+% Updating via Bayes theorem
+prob_temp=prior;
+for runs=1:100
+    
+    % Simulation of an interferometric experiment
+    prob_sim=likelihood(:,index_real);
+    cumulative = cumsum(prob_sim); % Cumulative function
+    prob_rand=rand; % Random selection
+    auxiliar=cumulative-prob_rand;
+    
+    for x=1:length(outcomes_space)
+        if auxiliar(x)>0
+            index=x;
+            break
+        end
+    end
+    
+    % Posterior density function
+    prob_temp=sparse(prob_temp.*likelihood(index,:));
+    if trapz(theta,prob_temp)>1e-16
+        prob_temp=prob_temp./trapz(theta,prob_temp);
+    else
+        prob_temp=0;
+    end
+    
+    % Posterior probability plots
+    if runs==1
+        plot(theta,prob_temp,'k-','LineWidth',2.5)
+        hold on
+    elseif runs==2; plot(theta,prob_temp,'k-','LineWidth',2.5)
+    elseif runs==10; plot(theta,prob_temp,'k-','LineWidth',2.5)
+    elseif runs==100; plot(theta,prob_temp,'k-','LineWidth',2.5)
+        hold off
+    end
+    
+end
+
+% Plot specifications
+grid
+fontsize=21;
+set(gcf,'units','points','position',[250,50,550,400])
+xlabel('$\color{mauve}{\$}$\theta$\color{mauve}{\$}$','Interpreter','latex','FontSize',fontsize)
+ylabel('$\color{mauve}{\$}$p(\theta | \textbf{\textit{m}})$\color{mauve}{\$}$','Interpreter','latex',$\hspace{0.15em}\swarrow$
+'FontSize',fontsize)
+xticks([0 pi/2 pi 3*pi/2 2*pi])
+xticklabels({'0','\pi/2','\pi', '3\pi/2','2\pi'})
+xlim([min(theta) max(theta)])
+set(gca, 'FontSize', fontsize,'FontName','Times New Roman')
+\end{lstlisting}
+
+\section{Mean square error for any number of trials}
+\label{sec:msematlab}
+
+\begin{lstlisting}[language=Matlab, mathescape=true]
+function [epsilon_trials]=mz_mse_trials(state_choice,pom_choice,$\hspace{0.15em}\swarrow$
+prior_width,prior_mean,mu_max)
+% Bayesian mean square error
+%
+% This programme calculates the mean square error as a function of the
+% number of repetitions.
+%
+% To run it, we need to specify the variables 'state_choice', which 
+% labels the initial state of a Mach-Zehnder interferometer; 'pom_choice',
+% which selects the measurement scheme; 'phase_width', which is the 
+% width of a flat prior probability; 'phase_mean', which is the centre
+% of its domain; and 'mu_max', which is the maximum number of trials.
+%
+% Note that this code relies on other MATLAB functions of our numerical
+% toolbox. The algorithm in this section has been exploited to calculate
+% the mean square error for all the single-parameter cases treated in this 
+% thesis, including the ideal schemes for optical interferometry studied 
+% in chapters 4 and 5, the calculation of the Taylor error to verify the
+% validity of our squared approximation in appendix A, our lossy analysis 
+% in chapter 8 and our analysis of the elapsed time, also in chapter 8.
+
+% Seed for the random generator
+rng('shuffle') 
+
+% Initial state
+initial_state=initial_probe(state_choice);
+
+% Space cutoff
+op_cutoff=sqrt(length(initial_state));
+
+% Parameter domain
+a=prior_mean-prior_width/2;
+b=prior_mean+prior_width/2;
+dim_theta=1250;
+theta=linspace(a,b,dim_theta);
+num_steps=125;
+step=round(dim_theta/num_steps);
+if step-round(step)~=0
+    disp('Error: dim_theta divided by num_steps must be an integer.')
+    return
+elseif num_steps<3
+    disp('Error: the approximation for the external theta integral needs$\hspace{0.15em}\swarrow$
+three rectangles at least.')
+    return
+end
+
+% Monte Carlo sample size
+tau_mc=1250;    
+
+% Measurement scheme
+[outcomes_space,proj_columns] = mz_pom(state_choice,pom_choice,$\hspace{0.15em}\swarrow$
+prior_width, prior_mean);
+
+% State after the phase shift, final state and amplitudes
+amplitudes=zeros(length(outcomes_space),dim_theta);
+for z=1:dim_theta
+    after_phase_shift=sparse(phase_shift_diff(op_cutoff,theta(z))$\hspace{0.15em}\swarrow$
+*initial_state);
+    for x=1:length(outcomes_space)        
+        pom_element=proj_columns(:,x);
+        amplitudes(x,z)=sparse(pom_element'*after_phase_shift);
+    end             
+end
+
+% Likelihood function
+likelihood=amplitudes.*conj(amplitudes);
+disp('The likelihood function has been created.')
+if (1-sum(likelihood(:,1)))>1e-7
+    error('The quantum probabilities do not sum to one.')
+end
+
+% Prior probability
+prior=ones(1,dim_theta);
+prior=prior/trapz(theta,prior);
+
+% Bayesian inference
+epsilon_bar=0;
+for index_real=1:step:dim_theta
+    epsilon_n=zeros(1,mu_max); % Preallocate vector
+    epsilon_n_sum=zeros(1,mu_max);
+    for times=1:tau_mc
+        
+        % Prior density function
+        prob_temp=prior;
+        for runs=1:mu_max
+            
+            % (Monte Carlo) Interferometric simulation
+            prob_sim1=likelihood(:,index_real);
+            cumulative1 = cumsum(prob_sim1); % Cumulative function
+            prob_rand1=rand; % Random selection
+            auxiliar1=cumulative1-prob_rand1;
+           
+            for x=1:length(outcomes_space)
+                if auxiliar1(x)>0
+                    index1=x;
+                    break
+                end
+            end
+            
+            % Posterior density function
+            prob_temp=sparse(prob_temp.*likelihood(index1,:));
+            if trapz(theta,prob_temp)>1e-16
+                prob_temp=prob_temp./trapz(theta,prob_temp);
+            else
+                prob_temp=0;
+            end
+            
+            % Experimental square error
+            theta_expe=trapz(theta,prob_temp.*theta);
+            theta2_expe=trapz(theta,prob_temp.*theta.^2);
+            epsilon_n(runs)=theta2_expe-theta_expe^2;    
+        end
+        
+        % Monte Carlo sum
+        epsilon_n_sum=epsilon_n_sum+epsilon_n;
+    end
+       
+    % Monte Carlo approximation for the Bayesian error
+    epsilon_average=epsilon_n_sum/(tau_mc);
+    epsilon_bar=epsilon_bar+epsilon_average*prior(index_real)$\hspace{0.15em}\swarrow$
+*(theta(2*step)-theta(step));
+end
+epsilon_trials=epsilon_bar;
+\end{lstlisting}
+
+The numerical precision for our calculation of $\bar{\epsilon}_{\mathrm{mse}}(\mu)$ can be estimated using the identity
+\begin{equation}
+\int d\theta p(\theta) \theta^2 = \int d\theta' p(\theta') \int d\boldsymbol{m}~ p(\boldsymbol{m}|\theta') \int d\theta p(\theta|\boldsymbol{m})\theta^2,
+\end{equation}
+where the right hand side is to be calculated numerically (with a code analogous to that presented above) and to be compared to the analytical solution for the left hand side. We have found that our numerical results for the Mach-Zehnder interferometer are valid up to the third significant figure.  
