@@ -1,22 +1,3 @@
-(* Content-type: application/vnd.wolfram.mathematica *)
-
-(*** Wolfram Notebook File ***)
-(* http://www.wolfram.com/nb *)
-
-(* CreatedBy='Mathematica 12.1' *)
-
-(*CacheID: 234*)
-(* Internal cache information:
-NotebookFileLineBreakTest
-NotebookFileLineBreakTest
-NotebookDataPosition[       158,          7]
-NotebookDataLength[     10443,        305]
-NotebookOptionsPosition[      8024,        252]
-NotebookOutlinePosition[      8580,        272]
-CellTagsIndexPosition[      8537,        269]
-WindowFrame->Normal*)
-
-(* Beginning of Notebook Content *)
 Notebook[{
 
 Cell[CellGroupData[{
@@ -24,14 +5,17 @@ Cell["\<\
 Single-shot minimum mean square error for collective POMs on \[Mu] copies of \
 a N00N state\
 \>", "Title",
+ CellChangeTimes->{{3.994658333637979*^9, 3.994658334371066*^9}},
  FontSize->24,ExpressionUUID->"767000d7-785a-403a-8259-7ce916f377d8"],
 
 Cell[CellGroupData[{
 
 Cell[" Number of copies", "Subsection",
+ CellChangeTimes->{{3.994658484700191*^9, 3.994658485764123*^9}},
  FontSize->18,ExpressionUUID->"134ecbef-2767-4da9-8220-3c2c8a245531"],
 
-Cell["Remark: \[Mu] must be greater than or equal to 2. ", "Text",ExpressionUUID->"26e2b967-9acc-4da8-bbff-c142cf2213e7"],
+Cell["Remark: \[Mu] must be greater than or equal to 2. ", \
+"Text",ExpressionUUID->"26e2b967-9acc-4da8-bbff-c142cf2213e7"],
 
 Cell[BoxData[{
  RowBox[{"Clear", "[", "\[Mu]", "]"}], "\n", 
@@ -45,7 +29,8 @@ Cell[CellGroupData[{
 Cell["Parameter-dependent probe state", "Subsection",
  FontSize->18,ExpressionUUID->"39df1cf5-81b2-4abf-9855-8dae42055d50"],
 
-Cell["Remark: j below denotes the index of repetition.", "Text",ExpressionUUID->"26f372de-9c31-4d9e-8bd2-0aacf5e07a60"],
+Cell["Remark: j below denotes the index of repetition.", \
+"Text",ExpressionUUID->"26f372de-9c31-4d9e-8bd2-0aacf5e07a60"],
 
 Cell[BoxData[{
  RowBox[{"Clear", "[", 
@@ -250,64 +235,15 @@ Cell[BoxData["0.0428159`"], "Output",
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{1438.5, 761.25},
+WindowSize->{1010.25, 583.5},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 PrintingCopies->1,
 PrintingPageRange->{1, Automatic},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
 TaggingRules->{"TryRealOnly" -> False},
 SpellingDictionaries->{"CorrectWords"->{"eigenbasis", "\[Rho]bar"}},
-FrontEndVersion->"14.3 for Linux x86 (64-bit) (July 8, 2025)",
+FrontEndVersion->"15.0 for Linux x86 (64-bit) (May 19, 2026)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"14a5c89b-a2f1-4317-961f-ca5ca40f8408"
 ]
-(* End of Notebook Content *)
-
-(* Internal cache information *)
-(*CellTagsOutline
-CellTagsIndex->{}
-*)
-(*CellTagsIndex
-CellTagsIndex->{}
-*)
-(*NotebookFileOutline
-Notebook[{
-Cell[CellGroupData[{
-Cell[580, 22, 186, 4, 70, "Title",ExpressionUUID->"767000d7-785a-403a-8259-7ce916f377d8"],
-Cell[CellGroupData[{
-Cell[791, 30, 109, 1, 50, "Subsection",ExpressionUUID->"134ecbef-2767-4da9-8220-3c2c8a245531"],
-Cell[903, 33, 121, 0, 33, "Text",ExpressionUUID->"26e2b967-9acc-4da8-bbff-c142cf2213e7"],
-Cell[1027, 35, 197, 4, 49, "Input",ExpressionUUID->"6a2732ea-f01e-44e8-8df7-09eb9a0ca45b"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[1261, 44, 123, 1, 50, "Subsection",ExpressionUUID->"39df1cf5-81b2-4abf-9855-8dae42055d50"],
-Cell[1387, 47, 119, 0, 33, "Text",ExpressionUUID->"26f372de-9c31-4d9e-8bd2-0aacf5e07a60"],
-Cell[1509, 49, 1544, 44, 109, "Input",ExpressionUUID->"0706d23d-47fb-4480-a774-e195135366e1"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[3090, 98, 109, 1, 50, "Subsection",ExpressionUUID->"11771dbb-ccb1-4e3a-9cc0-f8156aa6f891"],
-Cell[3202, 101, 762, 23, 129, "Input",ExpressionUUID->"fd4396ae-9566-4126-add3-3f013a9aff62"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[4001, 129, 135, 1, 50, "Subsection",ExpressionUUID->"dcc62a7e-4e78-42c7-bdcd-b8b3df56dd15"],
-Cell[4139, 132, 632, 16, 69, "Input",ExpressionUUID->"a80238fd-d4b4-443c-9046-3e8206fc382d"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[4808, 153, 159, 2, 50, "Subsection",ExpressionUUID->"716fb643-77c5-4dcc-8446-923f25b2f55f"],
-Cell[4970, 157, 821, 21, 89, "Input",ExpressionUUID->"195dfe84-b63c-4953-ba3c-d678ca8e5751"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[5828, 183, 117, 1, 50, "Subsection",ExpressionUUID->"475b30f3-0571-4954-8911-eb1ee4adbd4c"],
-Cell[5948, 186, 1040, 30, 89, "Input",ExpressionUUID->"e88e2a6b-e225-4314-b0db-072a5e8269fe"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[7025, 221, 129, 1, 50, "Subsection",ExpressionUUID->"daf06178-5c43-469a-a239-f136da5d3964"],
-Cell[CellGroupData[{
-Cell[7179, 226, 686, 18, 49, "Input",ExpressionUUID->"9e3d99a1-f72c-44e8-89cf-6c95d628d335"],
-Cell[7868, 246, 116, 1, 33, "Output",ExpressionUUID->"4da1cc01-37ba-45ee-b093-8d64381a1cea"]
-}, Open  ]]
-}, Open  ]]
-}, Open  ]]
-}
-]
-*)
 
